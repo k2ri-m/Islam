@@ -1,252 +1,820 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a0a0f" />
-  <title>WatchParty — مشاهدة جماعية</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة نور الإسلام الرقمية</title>
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital@0;1&family=Cinzel+Decorative:wght@400;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="theme-dark">
 
-<!-- ════════════════════════════════════
-     TOAST CONTAINER
-════════════════════════════════════ -->
-<div id="toast-container"></div>
-
-<!-- ════════════════════════════════════
-     AUTH SCREEN
-════════════════════════════════════ -->
-<div id="screen-auth" class="screen active">
-  <div class="home-bg">
-    <div class="home-glow home-glow-1"></div>
-    <div class="home-glow home-glow-2"></div>
-  </div>
-  <div class="auth-container">
-    <div class="home-badge"><span>⚡</span> مشاهدة جماعية فورية</div>
-    <h1 class="home-title">Watch<span class="accent">Party</span></h1>
-    <p class="home-sub">شاهد مقاطع الفيديو مع أصدقائك بشكل متزامن وبدون تأخير</p>
-
-    <div class="card auth-card">
-      <button class="btn-google" id="btn-google-signin" onclick="signInWithGoogle()">
-        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-        تسجيل الدخول بـ Google
-      </button>
-
-      <div class="divider"><span>أو</span></div>
-
-      <div class="field">
-        <label class="field-label">المتابعة كضيف</label>
-        <div class="input-wrap">
-          <span class="input-icon">👤</span>
-          <input id="input-guest-name" type="text" placeholder="اختر اسماً مؤقتاً..." maxlength="20" />
+    <!-- Loading Screen Overlay -->
+    <div class="loader-overlay" id="loader">
+        <div class="loader-container">
+            <!-- Islamic Geometric Mandala SVG -->
+            <svg class="loader-mandala" viewBox="0 0 100 100" width="120" height="120">
+                <circle cx="50" cy="50" r="45" fill="none" class="mandala-ring" />
+                <path d="M50,5 L50,95 M5,50 L95,50 M18,18 L82,82 M18,82 L82,18" class="mandala-grid" />
+                <path d="M50,15 L60,35 L85,35 L65,50 L75,75 L50,60 L25,75 L35,50 L15,35 L40,35 Z" class="mandala-star" />
+                <circle cx="50" cy="50" r="10" fill="none" class="mandala-inner" />
+            </svg>
+            <h1 class="loader-title">نور الإسلام</h1>
+            <p class="loader-subtitle">جاري تحضير البوابة الروحية</p>
+            <div class="loader-bar-container">
+                <div class="loader-bar-fill" id="loader-bar"></div>
+            </div>
         </div>
-      </div>
-
-      <p class="error-msg" id="auth-error"></p>
-
-      <button class="btn-outline" onclick="continueAsGuest()">المتابعة كضيف</button>
     </div>
 
-    <div class="features">
-      <div class="feature-card"><div class="feature-icon">🎬</div><div class="feature-name">رفع فيديو</div><div class="feature-desc">شارك أي فيديو محلي</div></div>
-      <div class="feature-card"><div class="feature-icon">🔒</div><div class="feature-name">غرف خاصة</div><div class="feature-desc">ادعُ من تريد فقط</div></div>
-      <div class="feature-card"><div class="feature-icon">⚡</div><div class="feature-name">تزامن فوري</div><div class="feature-desc">بدون تأخير</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ════════════════════════════════════
-     HOME SCREEN
-════════════════════════════════════ -->
-<div id="screen-home" class="screen">
-  <div class="home-bg">
-    <div class="home-glow home-glow-1"></div>
-    <div class="home-glow home-glow-2"></div>
-  </div>
-
-  <!-- Topbar -->
-  <div class="home-topbar">
-    <span class="logo">Watch<span class="accent">Party</span></span>
-    <div class="user-chip" id="user-chip">
-      <div class="user-avatar" id="user-avatar">؟</div>
-      <span id="user-display-name">-</span>
-      <button class="chip-signout" onclick="signOut()" title="خروج">✕</button>
-    </div>
-  </div>
-
-  <div class="home-container">
-    <div class="card">
-      <div class="tab-row">
-        <button class="tab active" id="tab-create" onclick="switchTab('create')">➕ إنشاء غرفة</button>
-        <button class="tab" id="tab-join" onclick="switchTab('join')">🔗 انضمام</button>
-      </div>
-
-      <div class="field">
-        <label class="field-label">اسمك في الغرفة</label>
-        <div class="input-wrap">
-          <span class="input-icon">👤</span>
-          <input id="input-username" type="text" placeholder="اسم يظهر للمشاركين..." maxlength="20" />
+    <!-- Sticky Header / Navbar -->
+    <header class="header" id="navbar">
+        <div class="top-bismillah-bar">
+            <span>بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span>
         </div>
-      </div>
+        <div class="navbar-container">
+            <a href="#" class="nav-logo" id="nav-logo">
+                <!-- Custom elegant Moon Crescent & Star Islamic emblem -->
+                <svg class="logo-icon" viewBox="0 0 100 100" width="40" height="40">
+                    <path d="M40,15 A35,35 0 1,0 85,60 A30,30 0 1,1 40,15 Z" fill="url(#goldGradient)" />
+                    <polygon points="65,30 70,40 80,40 72,46 75,56 65,49 55,56 58,46 50,40 60,40" fill="var(--color-accent-gold)" />
+                    <defs>
+                        <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#fbbf24" />
+                            <stop offset="100%" stop-color="#b45309" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <div class="logo-text-group">
+                    <span class="logo-arabic">نور الإسلام</span>
+                    <span class="logo-arabic-sub" style="font-size: 0.65rem; color: var(--color-text-muted); font-weight: 500;">البوابة الرقمية الشاملة</span>
+                </div>
+            </a>
 
-      <div class="field" id="field-roomid" style="display:none">
-        <label class="field-label">رمز الغرفة</label>
-        <div class="input-wrap">
-          <span class="input-icon">#</span>
-          <input id="input-roomid" type="text" placeholder="XXXXXXXX" maxlength="8" class="mono upper" />
+            <!-- Mobile toggle navigation button (SVGs only) -->
+            <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="Toggle Navigation Menu">
+                <svg class="hamburger-icon" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="3" y1="12" x2="21" y2="12" class="line-mid" />
+                    <line x1="3" y1="6" x2="21" y2="6" class="line-top" />
+                    <line x1="3" y1="18" x2="21" y2="18" class="line-bot" />
+                </svg>
+            </button>
+
+            <!-- Navigation Links -->
+            <nav class="nav-menu" id="nav-menu">
+                <ul class="nav-links">
+                    <li><a href="#hero" class="nav-link active">الرئيسة</a></li>
+                    <li><a href="#prayer-times" class="nav-link">مواقيت الصلاة</a></li>
+                    <li><a href="#quran" class="nav-link">القرآن الكريم</a></li>
+                    <li><a href="#hadith" class="nav-link">الحديث الشريف</a></li>
+                    <li><a href="#tasbeeh" class="nav-link">السبحة الإلكترونية</a></li>
+                    <li><a href="#calendar" class="nav-link">التقويم الهجري</a></li>
+                    <li><a href="#quotes" class="nav-link">حكم وعظات</a></li>
+                    <li><a href="#adhkar" class="nav-link">أذكار اليوم</a></li>
+                    <li><a href="#contact" class="nav-link">اتصل بنا</a></li>
+                </ul>
+            </nav>
+
+            <!-- Quick Theme Toggle Toggle -->
+            <button class="theme-toggle" id="theme-btn" aria-label="Toggle Dark/Light Mode">
+                <!-- Sun Icon SVG -->
+                <svg class="theme-icon sun-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5" />
+                    <line x1="12" y1="1" x2="12" y2="3" />
+                    <line x1="12" y1="21" x2="12" y2="23" />
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                    <line x1="1" y1="12" x2="3" y2="12" />
+                    <line x1="21" y1="12" x2="23" y2="12" />
+                    <line x1="4.22" y1="19.22" x2="5.64" y2="17.78" />
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </svg>
+                <!-- Moon Icon SVG -->
+                <svg class="theme-icon moon-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+            </button>
         </div>
-      </div>
+    </header>
 
-      <p class="error-msg" id="home-error"></p>
+    <!-- Main Content -->
+    <main>
 
-      <button class="btn-primary" id="btn-submit" onclick="handleSubmit()">
-        <span id="btn-text">إنشاء غرفة جديدة</span>
-      </button>
-    </div>
+        <!-- 1. Hero / Home Section -->
+        <section class="hero-section" id="hero">
+            <div class="hero-bg-wrapper">
+                <img src="mosque_hero_bg.png" alt="Islamic Mosque Silhouette Background" class="hero-bg-img" id="hero-bg" referrerpolicy="no-referrer">
+                <div class="hero-overlay"></div>
+            </div>
+            
+            <div class="hero-content container">
+                <!-- Golden Bismillah Calligraphy Decorative Box -->
+                <div class="bismillah-wrapper animate-fade-in">
+                    <svg class="bismillah-svg" viewBox="0 0 100 35" width="240" height="84">
+                        <!-- Custom vector style representing the beautiful layout of Bismillah text -->
+                        <path d="M10,18 C15,12 25,12 35,16 C45,20 55,20 65,16 C75,12 85,12 90,18" fill="none" stroke="url(#goldGradient)" stroke-width="1.5" />
+                        <text x="50" y="22" font-family="'Amiri', serif" font-size="20" fill="url(#goldGradient)" text-anchor="middle" font-weight="bold">بسم الله الرحمن الرحيم</text>
+                        <circle cx="20" cy="15" r="1.5" fill="var(--color-accent-gold)" />
+                        <circle cx="80" cy="15" r="1.5" fill="var(--color-accent-gold)" />
+                    </svg>
+                </div>
 
-    <!-- Recent Rooms -->
-    <div class="recent-section" id="recent-section" style="display:none">
-      <div class="recent-header">
-        <span>🕐 غرفك الأخيرة</span>
-        <button class="clear-btn" onclick="clearHistory()">مسح الكل</button>
-      </div>
-      <div class="recent-list" id="recent-list"></div>
-    </div>
+                <div class="title-animation-box">
+                    <p class="hero-badge animate-fade-in-up">مرحباً بكم في بوابة نور الإسلام</p>
+                    <h1 class="hero-title font-title animate-text" id="animate-main-title">
+                        بوابتك الرقمية إلى <span class="text-gold">الطمأنينة الروحية</span>
+                    </h1>
+                </div>
 
-    <div class="features">
-      <div class="feature-card"><div class="feature-icon">🎬</div><div class="feature-name">رفع فيديو</div><div class="feature-desc">شارك أي فيديو محلي</div></div>
-      <div class="feature-card"><div class="feature-icon">🔒</div><div class="feature-name">غرف خاصة</div><div class="feature-desc">ادعُ من تريد فقط</div></div>
-      <div class="feature-card"><div class="feature-icon">⚡</div><div class="feature-name">تزامن فوري</div><div class="feature-desc">بدون تأخير</div></div>
-    </div>
+                <p class="hero-subtitle animate-fade-in-up">
+                    تابع مواقيت الصلاة الدقيقة، وتصفح القرآن الكريم بتلاوات تفاعلية، واقرأ الأحاديث الشريفة اليومية، مع ميزة السبحة الإلكترونية والتقويم الهجري المنسق.
+                </p>
 
-    <div class="shortcuts-hint">
-      <span>⌨️ اختصارات في الغرفة:</span>
-      <kbd>Space</kbd> تشغيل/إيقاف &nbsp;
-      <kbd>←</kbd><kbd>→</kbd> تقديم/ترجيع &nbsp;
-      <kbd>M</kbd> كتم &nbsp;
-      <kbd>F</kbd> ملء الشاشة
-    </div>
-  </div>
-</div>
+                <div class="hero-cta-buttons animate-fade-in-up">
+                    <a href="#prayer-times" class="btn btn-primary" id="cta-prayers">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                        مواقيت الصلاة
+                    </a>
+                    <a href="#quran" class="btn btn-secondary" id="cta-quran">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                        </svg>
+                        تصفح القرآن الكريم
+                    </a>
+                </div>
+            </div>
 
-<!-- ════════════════════════════════════
-     ROOM SCREEN
-════════════════════════════════════ -->
-<div id="screen-room" class="screen">
-  <header class="room-header">
-    <div class="header-left">
-      <button class="icon-btn" onclick="leaveRoom()" title="مغادرة الغرفة">←</button>
-      <span class="logo">Watch<span class="accent">Party</span></span>
-      <span class="room-title-badge" id="room-title-badge"></span>
-    </div>
-    <div class="header-center" id="sync-indicator" style="display:none">
-      <span class="sync-dot"></span>
-      <span class="sync-label">متزامن</span>
-    </div>
-    <div class="header-right">
-      <button class="hdr-btn" id="btn-participants" onclick="toggleSidebar('participants')">
-        👥 <span id="participants-count">0</span>
-      </button>
-      <button class="hdr-btn chat-toggle-btn" onclick="toggleSidebar('chat')">
-        💬 <span id="unread-badge" class="unread-badge" style="display:none">0</span>
-      </button>
-      <button class="hdr-btn mono" id="btn-copy-room" onclick="copyRoomId()">
-        <span id="copy-icon">📋</span> <span id="room-id-display"></span>
-      </button>
-    </div>
-  </header>
+            <!-- Absolute decorative visual helper bottom separator -->
+            <div class="hero-divider">
+                <svg viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0,80 C360,110 720,110 1080,80 C1200,70 1320,50 1440,30 L1440,100 L0,100 Z" fill="var(--color-bg-base)" />
+                </svg>
+            </div>
+        </section>
 
-  <div class="room-body">
-    <!-- Video -->
-    <div class="video-section">
-      <div class="video-wrapper" id="video-wrapper">
-        <div class="overlay" id="overlay-empty">
-          <div class="overlay-icon">🎬</div>
-          <p class="overlay-title">لا يوجد فيديو بعد</p>
-          <p class="overlay-sub">ارفع فيديو لتبدأ المشاهدة الجماعية</p>
-          <button class="btn-primary small" onclick="document.getElementById('file-input').click()">⬆ رفع فيديو</button>
+
+        <!-- 2. Prayer Times Section -->
+        <section class="section prayer-section" id="prayer-times">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title font-title" id="title-prayer">مواقيت الصلاة اليومية</h2>
+                    <p class="section-desc">حافظ على صلواتك في أوقاتها المحددة. يتم احتساب الأوقات تلقائياً حسب مكانك الحالي.</p>
+                </div>
+
+                <!-- Clock / Live Status Card -->
+                <div class="clock-glass-card" id="clock-card">
+                    <div class="clock-grid">
+                        <div class="clock-display-group">
+                            <div class="live-clock" id="live-time">00:00:00 م</div>
+                            <div class="live-date-dual">
+                                <span class="gregorian-label" id="live-gregorian-date">التاريخ الميلادي</span>
+                                <span class="divider-dot"></span>
+                                <span class="hijri-label text-gold" id="live-hijri-date">التاريخ الهجري</span>
+                            </div>
+                        </div>
+                        <div class="prayer-status-tracker">
+                            <div class="status-label">الصلاة القادمة خلال</div>
+                            <div class="countdown-timer" id="prayer-countdown">--:--:--</div>
+                            <div class="next-prayer-name" id="next-prayer-title">الصلاة التالية: الفجر</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prayer Cards Grid -->
+                <div class="prayer-grid" id="prayer-cards-container">
+                    <!-- Cards will be populated dynamically or static fallback for instant display -->
+                    <div class="prayer-glass-card" id="card-fajr">
+                        <div class="card-glow-layer"></div>
+                        <div class="prayer-icon-wrap">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                            </svg>
+                        </div>
+                        <h3 class="prayer-name">الفجر</h3>
+                        <p class="prayer-time" id="time-fajr">04:32 ص</p>
+                        <span class="prayer-tag">صلاة الفجر</span>
+                    </div>
+
+                    <div class="prayer-glass-card" id="card-sunrise">
+                        <div class="card-glow-layer"></div>
+                        <div class="prayer-icon-wrap">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M17 18a5 5 0 0 0-10 0" />
+                                <path d="M12 2v7M4.93 4.93l4.95 4.95M19.07 4.93l-4.95 4.95" />
+                                <line x1="2" y1="18" x2="22" y2="18" />
+                            </svg>
+                        </div>
+                        <h3 class="prayer-name">الشروق</h3>
+                        <p class="prayer-time" id="time-sunrise">05:58 ص</p>
+                        <span class="prayer-tag">شروق الشمس</span>
+                    </div>
+
+                    <div class="prayer-glass-card" id="card-dhuhr">
+                        <div class="card-glow-layer"></div>
+                        <div class="prayer-icon-wrap">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <circle cx="12" cy="12" r="5" />
+                                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.22l1.42-1.42M18.36 5.64l1.42-1.42" />
+                            </svg>
+                        </div>
+                        <h3 class="prayer-name">الظهر</h3>
+                        <p class="prayer-time" id="time-dhuhr">12:30 م</p>
+                        <span class="prayer-tag">صلاة الظهر</span>
+                    </div>
+
+                    <div class="prayer-glass-card" id="card-asr">
+                        <div class="card-glow-layer"></div>
+                        <div class="prayer-icon-wrap">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <circle cx="12" cy="12" r="5" fill="none" />
+                                <path d="M12 1v2M12 21v2" />
+                                <path d="M8 12a4 4 0 0 1 8 0" />
+                            </svg>
+                        </div>
+                        <h3 class="prayer-name">العصر</h3>
+                        <p class="prayer-time" id="time-asr">04:05 م</p>
+                        <span class="prayer-tag">صلاة العصر</span>
+                    </div>
+
+                    <div class="prayer-glass-card" id="card-maghrib">
+                        <div class="card-glow-layer"></div>
+                        <div class="prayer-icon-wrap">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M12 10a4 4 0 0 0-4 4h8a4 4 0 0 0-4-4z" />
+                                <line x1="2" y1="18" x2="22" y2="18" />
+                                <line x1="12" y1="2" x2="12" y2="6" />
+                            </svg>
+                        </div>
+                        <h3 class="prayer-name">المغرب</h3>
+                        <p class="prayer-time" id="time-maghrib">07:02 م</p>
+                        <span class="prayer-tag">صلاة المغرب</span>
+                    </div>
+
+                    <div class="prayer-glass-card" id="card-isha">
+                        <div class="card-glow-layer"></div>
+                        <div class="prayer-icon-wrap">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z" />
+                                <circle cx="19" cy="5" r="1" fill="currentColor" />
+                                <circle cx="15" cy="8" r="0.7" fill="currentColor" />
+                            </svg>
+                        </div>
+                        <h3 class="prayer-name">العشاء</h3>
+                        <p class="prayer-time" id="time-isha">08:28 م</p>
+                        <span class="prayer-tag">صلاة العشاء</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 3. Quran Section -->
+        <section class="section quran-section" id="quran">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title font-title" id="title-quran">القرآن الكريم</h2>
+                    <p class="section-desc">ابحث وتصفح واستمع إلى سور عظيمة من الذكر الحكيم مع معاني الآيات العطرة.</p>
+                </div>
+
+                <div class="quran-search-bar-wrap">
+                    <div class="search-input-box">
+                        <!-- Search Icon SVG -->
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" class="search-icon">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        <input type="text" id="quran-search" placeholder="ابحث عن سور القرآن الكريم (مثال: الفاتحة، الكهف، الملك، يس)..." aria-label="Search Quran Surahs">
+                        <button id="quran-search-clear" class="search-clear-btn" aria-label="Clear Search">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="quran-split-layout">
+                    <!-- Surah Sidebar List -->
+                    <div class="quran-surah-sidebar">
+                        <div class="sidebar-scroller" id="surah-list-container">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Surah Main Reader Panel -->
+                    <div class="quran-main-reader">
+                        <div class="reader-glass-panel" id="quran-reader-panel">
+                            <!-- Dynamic Content -->
+                            <div class="reader-header-glass">
+                                <div class="surah-info-title-group">
+                                    <h3 class="active-surah-name" id="active-surah-title">سورة الفاتحة</h3>
+                                    <p class="active-surah-sub" id="active-surah-details">فاتحة الكتاب • ٧ آيات • مكية</p>
+                                </div>
+                                <div class="surah-arabic-title font-serif" id="active-surah-arabic">الفاتحة</div>
+                            </div>
+
+                            <!-- Audio Deck Interface -->
+                            <div class="audio-control-deck">
+                                <button class="audio-deck-btn" id="audio-play-btn" aria-label="Play Quran Audio">
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" id="play-svg">
+                                        <polygon points="5 3 19 12 5 21 5 3" />
+                                    </svg>
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" id="pause-svg" class="hidden">
+                                        <rect x="6" y="4" width="4" height="16" />
+                                        <rect x="14" y="4" width="4" height="16" />
+                                    </svg>
+                                    تشغيل التلاوة الصوتية
+                                </button>
+                                <span class="audio-reciter-name">بصوت القارئ: الشيخ سعد الغامدي</span>
+                            </div>
+
+                            <!-- Quran Verses Area -->
+                            <div class="quran-verses-box" id="verses-box">
+                                <!-- Verse cards generated in script.js -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 4. Hadith Section -->
+        <section class="section hadith-section" id="hadith">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title font-title" id="title-hadith">الحديث الشريف</h2>
+                    <p class="section-desc">مواعظ ورسائل هدى طيبة ومأثورة من السيرة المحمدية العطرة (ﷺ).</p>
+                </div>
+
+                <div class="hadith-card-wrapper">
+                    <div class="hadith-glass-card" id="hadith-container">
+                        <div class="hadith-top-aesthetic">
+                            <!-- Custom elegant geometric pattern divider SVG -->
+                            <svg viewBox="0 0 100 20" width="160" height="32" class="decorative-pattern-svg">
+                                <path d="M10,10 L30,5 L50,15 L70,5 L90,10" fill="none" stroke="var(--color-accent-gold)" stroke-width="2" />
+                                <circle cx="50" cy="15" r="4" fill="var(--color-accent-gold)" />
+                                <circle cx="10" cy="10" r="2" fill="var(--color-accent-gold)" />
+                                <circle cx="90" cy="10" r="2" fill="var(--color-accent-gold)" />
+                            </svg>
+                        </div>
+
+                        <blockquote class="hadith-blockquote" id="hadith-content">
+                            <span class="hadith-arabic font-serif" id="hadith-txt-ar">«إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى»</span>
+                            <p class="hadith-english" id="hadith-txt-en">"Actions are judged by motives, and each person will receive rewards according to his intentions."</p>
+                            <cite class="hadith-narrator" id="hadith-author">صحيح البخاري ١</cite>
+                        </blockquote>
+
+                        <button class="btn btn-secondary rand-hadith-btn" id="generate-hadith" aria-label="Load Another Hadith">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" class="rotator-icon">
+                                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                            </svg>
+                            حديث شريف آخر
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 5. Tasbeeh Counter Section -->
+        <section class="section tasbeeh-section" id="tasbeeh">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title font-title" id="title-tasbeeh">السبحة الإلكترونية</h2>
+                    <p class="section-desc">احسب تسبيحاتك اليومية وأذكارك بسهولة. يُحفظ تقدمك تلقائياً في متصفحك.</p>
+                </div>
+
+                <div class="tasbeeh-layout-grid">
+                    <!-- Presets Selection List -->
+                    <div class="tasbeeh-presets-box">
+                        <h3 class="panel-subtitle">اختر الذكر المفضل</h3>
+                        <div class="dhikr-presets-grid" id="dhikr-presets">
+                            <button class="dhikr-btn-preset active" data-dhikr-ar="سُبْحَانَ ٱللَّٰهِ" data-dhikr-en="Subhan'Allah" data-target-count="33">
+                                <span class="preset-ar font-serif">سُبْحَانَ ٱللَّٰهِ</span>
+                                <span class="preset-en" style="font-size:0.75rem; color:rgba(255,255,255,0.4);">الهدف: ٣٣ مرة</span>
+                            </button>
+                            <button class="dhikr-btn-preset" data-dhikr-ar="ٱلْحَمْدُ لِلَّٰهِ" data-dhikr-en="Alhamdulillah" data-target-count="33">
+                                <span class="preset-ar font-serif">ٱلْحَمْدُ لِلَّٰهِ</span>
+                                <span class="preset-en" style="font-size:0.75rem; color:rgba(255,255,255,0.4);">الهدف: ٣٣ مرة</span>
+                            </button>
+                            <button class="dhikr-btn-preset" data-dhikr-ar="ٱللَّٰهُ أَكْبَرُ" data-dhikr-en="Allahu Akbar" data-target-count="33">
+                                <span class="preset-ar font-serif">ٱللَّٰهُ أَكْبَرُ</span>
+                                <span class="preset-en" style="font-size:0.75rem; color:rgba(255,255,255,0.4);">الهدف: ٣٣ مرة</span>
+                            </button>
+                            <button class="dhikr-btn-preset" data-dhikr-ar="لَا إِلَٰهَ إِلَّا ٱللَّٰهُ" data-dhikr-en="La ilaha illa Allah" data-target-count="100">
+                                <span class="preset-ar font-serif">لَا إِلَٰهَ إِلَّا ٱللَّٰهُ</span>
+                                <span class="preset-en" style="font-size:0.75rem; color:rgba(255,255,255,0.4);">الهدف: ١٠٠ مرة</span>
+                            </button>
+                            <button class="dhikr-btn-preset" data-dhikr-ar="أَسْتَغْفِرُ ٱللَّٰهَ" data-dhikr-en="Astaghfirullah" data-target-count="100">
+                                <span class="preset-ar font-serif">أَسْتَغْفِرُ ٱللَّٰهَ</span>
+                                <span class="preset-en" style="font-size:0.75rem; color:rgba(255,255,255,0.4);">الهدف: ١٠٠ مرة</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Counter Engine -->
+                    <div class="tasbeeh-engine-center">
+                        <div class="tasbeeh-glass-card">
+                            <div class="active-dhikr-visual uppercase-label" id="tasbeeh-active-dhikr-en" style="display: none;">Subhan'Allah</div>
+                            <div class="active-dhikr-arabic-visual font-serif" id="tasbeeh-active-dhikr-ar">سُبْحَانَ ٱللَّٰهِ</div>
+
+                            <!-- Circular interactive tracker dial -->
+                            <div class="tasbeeh-dial-wrapper">
+                                <svg class="tasbeeh-progress-ring" width="220" height="220">
+                                    <circle class="ring-bg" cx="110" cy="110" r="95" fill="transparent" />
+                                    <circle class="ring-status-bar" id="ring-bar" cx="110" cy="110" r="95" fill="transparent" />
+                                </svg>
+                                <button class="tasbeeh-click-surface" id="tasbeeh-increment" aria-label="Increment Counter">
+                                    <div class="dial-inside-card">
+                                        <span class="main-counter-value" id="tasbeeh-score">0</span>
+                                        <span class="target-sub-desc" id="tasbeeh-max">الهدف: ٣٣</span>
+                                    </div>
+                                    <div class="surface-ripple-layer" id="ripple"></div>
+                                </button>
+                            </div>
+
+                            <div class="tasbeeh-management-row">
+                                <button class="tasbeeh-sub-btn" id="tasbeeh-sound-toggle" aria-label="Toggle Sound Effects">
+                                    <!-- Volume High SVG -->
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" id="sound-on-svg">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+                                    </svg>
+                                    <!-- Volume X Mute SVG -->
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" id="sound-off-svg" class="hidden">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                                        <line x1="23" y1="9" x2="17" y2="15" />
+                                        <line x1="17" y1="9" x2="23" y2="15" />
+                                    </svg>
+                                    الصوت: مفعّل
+                                </button>
+                                <button class="tasbeeh-sub-btn reset-theme" id="tasbeeh-reset" aria-label="Reset Count">
+                                    <!-- Reset / Rotate SVG -->
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                                    </svg>
+                                    تصفير
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 6. Islamic hijri Calendar Section -->
+        <section class="section calendar-section" id="calendar">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title font-title" id="title-calendar">التقويم الهجري والميلادي</h2>
+                    <p class="section-desc">تتبع ومطابقة التواريخ الهجرية ومواقيت الأشهر الهجرية مقارنة بالشهور الميلادية المعتمدة.</p>
+                </div>
+
+                <div class="calendar-glass-layout">
+                    <!-- Top current status banner -->
+                    <div class="calendar-current-card">
+                        <div class="cal-badge text-gold" id="cal-hijri-full">ذو القعدة ١٤٤٧ هـ</div>
+                        <div class="cal-gregorian-text" id="cal-gregorian-full">السبت، ٢٣ مايو ٢٠٢٦</div>
+                        <div class="cal-status-label">الفترة الروحانية الحالية</div>
+                    </div>
+
+                    <!-- Month View Layout -->
+                    <div class="calendar-layout-grid">
+                        <div class="calendar-grid-box">
+                            <div class="month-header-strip">
+                                <button class="month-nav-arrow" id="calendar-prev" aria-label="Previous Month">
+                                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <polyline points="15 18 9 12 15 6" />
+                                    </svg>
+                                </button>
+                                <h3 class="month-label font-title" id="month-title-display">مايو ٢٠٢٦</h3>
+                                <button class="month-nav-arrow" id="calendar-next" aria-label="Next Month">
+                                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <polyline points="9 18 15 12 9 6" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="calendar-date-grid">
+                                <!-- Days of Week label bar -->
+                                <div class="calendar-days-bar">
+                                    <span>أحد</span>
+                                    <span>إثنين</span>
+                                    <span>ثلاثاء</span>
+                                    <span>أربعاء</span>
+                                    <span>خميس</span>
+                                    <span>جمعة</span>
+                                    <span>سبت</span>
+                                </div>
+                                <div class="calendar-cells-container" id="calendar-cells">
+                                    <!-- Rendered dynamically by script.js -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Important Key Dates Metadata -->
+                        <div class="calendar-key-events-box bg-panel-dark">
+                            <h3 class="panel-subtitle text-gold">أبرز المناسبات الإسلامية (١٤٤٧ هـ)</h3>
+                            <div class="spiritual-event-list">
+                                <div class="event-item">
+                                    <div class="event-date-indicator">
+                                        <span class="event-ar font-serif">١ رمضان</span>
+                                    </div>
+                                    <div class="event-meta-desc">
+                                        <span class="event-name-text">بداية صيام شهر رمضان المبارك (مارس ٢٠٢٦)</span>
+                                    </div>
+                                </div>
+                                <div class="event-item">
+                                    <div class="event-date-indicator">
+                                        <span class="event-ar font-serif">٢٧ رمضان</span>
+                                    </div>
+                                    <div class="event-meta-desc">
+                                        <span class="event-name-text">ليلة القدر المباركة (أواخر مارس ٢٠٢٦)</span>
+                                    </div>
+                                </div>
+                                <div class="event-item">
+                                    <div class="event-date-indicator">
+                                        <span class="event-ar font-serif">١ شوال</span>
+                                    </div>
+                                    <div class="event-meta-desc">
+                                        <span class="event-name-text">عيد الفطر السعيد (أبريل ٣، ٢٠٢٦)</span>
+                                    </div>
+                                </div>
+                                <div class="event-item active">
+                                    <div class="event-date-indicator">
+                                        <span class="event-ar font-serif">١٠ ذو الحجة</span>
+                                    </div>
+                                    <div class="event-meta-desc">
+                                        <span class="event-name-text">عيد الأضحى المبارك (أوائل يونيو ٢٠٢٦)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 7. Islamic Quotes Slider Section -->
+        <section class="section quotes-section" id="quotes">
+            <div class="gradient-overlay-accent"></div>
+            <div class="container relative-pos">
+                <div class="section-header text-center">
+                    <h2 class="section-title font-title" id="title-quotes">حكم ومواعظ إيمانية</h2>
+                    <p class="section-desc">مواعظ واقتباسات تنير القلوب وتغذي العقول بالحكمة والسلام.</p>
+                </div>
+
+                <div class="quotes-slider-layout">
+                    <!-- Main slider display card -->
+                    <div class="slider-display-card">
+                        <!-- Sliding cards -->
+                        <div class="slider-items-wrapper" id="slider-wrapper">
+                            <div class="quote-slide active">
+                                <p class="quote-text-main font-serif">"خياركم أحسنكم أخلاقاً"</p>
+                                <span class="quote-author-source">— الرسول محمد (ﷺ)، صحيح البخاري</span>
+                            </div>
+                            <div class="quote-slide">
+                                <p class="quote-text-main font-serif">"كن في الدنيا كأنك غريب أو عابر سبيل"</p>
+                                <span class="quote-author-source">— عبد الله بن عمر (رضي الله عنه)، صحيح البخاري</span>
+                            </div>
+                            <div class="quote-slide">
+                                <p class="quote-text-main font-serif">"لا تنظر إلى صغر الخطيئة، ولكن انظر إلى عظمة من عصيت"</p>
+                           <!-- 8. Interactive Adhkar Section -->
+        <section class="section donation-section" id="donate">
+            <div class="container animate-fade-in-up">
+                <div class="section-header text-center">
+                    <h2 class="section-title font-title" id="title-donate">أذكار الصباح والمساء</h2>
+                    <p class="section-desc">حصن نفسك بأذكار الصباح والمساء اليومية المأثورة المنسقة والمتباعدة بدقة عالية ليسهل عليك قراءتها وتتبعها يومياً.</p>
+                </div>
+
+                <!-- Adhkar Tabs & Progress Panel -->
+                <div class="adhkar-control-panel">
+                    <div class="adhkar-tabs" id="adhkar-tabs-group">
+                        <button class="adhkar-tab-btn active" id="tab-morning" data-tab="morning">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="tab-icon">
+                                <circle cx="12" cy="12" r="5" />
+                                <line x1="12" y1="1" x2="12" y2="3" />
+                                <line x1="12" y1="21" x2="12" y2="23" />
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                                <line x1="1" y1="12" x2="3" y2="12" />
+                                <line x1="21" y1="12" x2="23" y2="12" />
+                            </svg>
+                            أذكار الصباح
+                        </button>
+                        <button class="adhkar-tab-btn" id="tab-evening" data-tab="evening">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="tab-icon">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                            </svg>
+                            أذكار المساء
+                        </button>
+                    </div>
+
+                    <div class="adhkar-global-progress">
+                        <div class="progress-details">
+                            <span id="adhkar-progress-text">جاري احتساب التقدم...</span>
+                            <button class="adhkar-reset-btn" id="adhkar-global-reset" title="تصفير أذكار هذا القسم">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                                </svg>
+                                تصفير الأذكار
+                            </button>
+                        </div>
+                        <div class="progress-bar-outer">
+                            <div class="progress-bar-inner" id="adhkar-progress-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spaced Out List of Adhkar in orderly arrangement -->
+                <div class="adhkar-layout-list animate-fade-in" id="adhkar-cards-list">
+                    <!-- Populated dynamically by script.js with beautiful animation -->
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 9. Contact Section -->
+        <section class="section contact-section" id="contact">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title font-title" id="title-contact">تواصل معنا</h2>
+                    <p class="section-desc">هل لديك أي اقتراحات أو استفسارات حول البوابة الرقمية؟ يسعدنا تواصلك معنا مباشرة.</p>
+                </div>
+
+                <div class="contact-split-layout">
+                    <!-- Form Container -->
+                    <div class="contact-form-glass-card">
+                        <form id="islamic-contact-form" novalidate>
+                            <div class="form-row">
+                                <div class="form-control-wrap">
+                                    <label for="usr-name">الاسم الكامل</label>
+                                    <input type="text" id="usr-name" name="name" placeholder="مثال: كريم أحمد" required>
+                                    <span class="field-error-msg" id="err-name">الاسم الكامل مطلوب.</span>
+                                </div>
+                                <div class="form-control-wrap">
+                                    <label for="usr-email">البريد الإلكتروني</label>
+                                    <input type="email" id="usr-email" name="email" placeholder="مثال: contact@domain.com" required>
+                                    <span class="field-error-msg" id="err-email">يرجى كتابة بريد إلكتروني صحيح.</span>
+                                </div>
+                            </div>
+
+                            <div class="form-control-wrap">
+                                <label for="usr-subject">موضوع الرسالة</label>
+                                <input type="text" id="usr-subject" name="subject" placeholder="مثال: اقتراح بخصوص السبحة أو الأذكار" required>
+                                <span class="field-error-msg" id="err-subject">الموضوع مطلوب.</span>
+                            </div>
+
+                            <div class="form-control-wrap">
+                                <label for="usr-message">نص الرسالة</label>
+                                <textarea id="usr-message" name="message" rows="5" placeholder="اكتب اقتراحك أو استفسارك هنا..." required></textarea>
+                                <span class="field-error-msg" id="err-message">لا يمكن إرسال رسالة فارغة.</span>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-full" id="contact-submit-btn">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                                    <line x1="22" y1="2" x2="11" y2="13" />
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                                </svg>
+                                إرسال الرسالة
+                            </button>
+                        </form>
+                        
+                        <div class="success-alert-glow hidden" id="contact-success-box">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" class="alert-icon">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            <div class="alert-txt">
+                                <strong>الحمد لله!</strong> تم التحقق من رسالتك بنجاح وحفظها في السجلات المحلية للمحاكة الفورية.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Map Blueprint Sidebar -->
+                    <div class="contact-details-sidebar">
+                        <div class="contact-info-card-glass">
+                            <div class="info-item">
+                                <div class="info-icon-wrap">
+                                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                        <circle cx="12" cy="10" r="3" />
+                                    </svg>
+                                </div>
+                                <div class="info-text">
+                                    <h4>الموقع الفعلي للمقر</h4>
+                                    <p>حي الأزهر الشريف، القاهرة، جمهورية مصر العربية</p>
+                                </div>
+                            </div>
+
+                            <div class="info-item">
+                                <div class="info-icon-wrap">
+                                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                                    </svg>
+                                </div>
+                                <div class="info-text">
+                                    <h4>الخط المباشر الموحد</h4>
+                                    <p>+20 (2) 555-6667 (دولي)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Beautiful stylized Google Maps placeholder with geometric outlines -->
+                        <div class="map-placeholder-card-glass">
+                            <div class="map-aesthetic-header">
+                                <span class="map-green-pulse"></span>
+                                <h5>مخطط تحديد موقع بيت الله</h5>
+                            </div>
+                            <div class="map-blueprint-box">
+                                <svg class="blueprint-lines" viewBox="0 0 260 140" width="100%" height="100%">
+                                    <!-- Streets blueprint pattern -->
+                                    <line x1="20" y1="10" x2="20" y2="130" stroke="rgba(251,191,36,0.1)" stroke-width="2" />
+                                    <line x1="120" y1="10" x2="120" y2="130" stroke="rgba(251,191,36,0.15)" stroke-width="3" />
+                                    <line x1="220" y1="10" x2="220" y2="130" stroke="rgba(251,191,36,0.1)" stroke-width="2" />
+                                    <line x1="10" y1="40" x2="250" y2="40" stroke="rgba(251,191,36,0.1)" stroke-width="2" />
+                                    <line x1="10" y1="90" x2="250" y2="90" stroke="rgba(251,191,36,0.2)" stroke-width="4" />
+                                    
+                                    <!-- Mosque outline box -->
+                                    <rect x="90" y="55" width="60" height="25" rx="4" fill="rgba(6, 78, 59, 0.4)" stroke="var(--color-accent-gold)" stroke-width="1.5" />
+                                    <!-- Minaret dots -->
+                                    <circle cx="95" cy="67" r="2" fill="var(--color-accent-gold)" />
+                                    <circle cx="145" cy="67" r="2" fill="var(--color-accent-gold)" />
+                                    <text x="120" y="71" font-size="6" font-family="'Plus Jakarta Sans', sans-serif" fill="white" font-weight="bold" text-anchor="middle">الجامع الأزهر</text>
+                                    
+                                    <!-- User location pulse -->
+                                    <circle cx="190" cy="110" r="4" fill="#10b981" />
+                                    <circle cx="190" cy="110" r="10" fill="none" stroke="#10b981" stroke-width="1" class="pulse" />
+                                    <text x="190" y="125" font-size="5" font-family="'Plus Jakarta Sans', sans-serif" fill="#10b981" text-anchor="middle">موقعك الحالي</text>
+
+                                    <!-- Navigation route vector line -->
+                                    <path d="M190,110 L190,90 L120,90 L120,80" fill="none" stroke="var(--color-accent-gold)" stroke-width="2" stroke-dasharray="3,3" />
+                                </svg>
+                                <span class="blueprint-coordinate">COORD: 30.0444° N, 31.2357° E</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-bottom container">
+            <div class="footer-credits">
+                <p>&copy; ٢٠٢٦ منصة نور الإسلام الرقمية. صُمّمت للحب والتعلم السلمي، نفع الله بها المسلمين أجمعين.</p>
+                <p class="arabic-blessing font-serif">سبحان الله وبحمده، سبحان الله العظيم</p>
+            </div>
+            
+            <!-- Standard Social Links with SVGs only, absolutely no emojis -->
+            <div class="footer-social-deck">
+                <a href="#" class="social-btn" aria-label="Our Facebook">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                    </svg>
+                </a>
+                <a href="#" class="social-btn" aria-label="Our Twitter / X">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" />
+                    </svg>
+                </a>
+                <a href="#" class="social-btn" aria-label="Our Instagram">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                    </svg>
+                </a>
+                <a href="#" class="social-btn" aria-label="Our YouTube channel">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
+                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
+                    </svg>
+                </a>
+            </div>
         </div>
-        <div class="overlay hidden" id="overlay-uploading">
-          <div class="upload-anim">
-            <div class="upload-ring"></div>
-            <span class="upload-emoji">🎞</span>
-          </div>
-          <p class="overlay-title">جارٍ تحضير الفيديو...</p>
-          <p class="overlay-sub" id="uploading-filename">المضيف يرفع الفيديو، سيبدأ التشغيل تلقائياً</p>
-          <div class="dots"><span></span><span></span><span></span></div>
-        </div>
-        <div class="overlay hidden" id="overlay-buffering">
-          <div class="spinner"></div>
-        </div>
-        <video id="video-player" playsinline></video>
+    </footer>
 
-        <!-- Video name overlay -->
-        <div class="video-title-overlay" id="video-title-overlay"></div>
-      </div>
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="back-to-top" aria-label="Scroll Back to Top">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="18 15 12 9 6 15" />
+        </svg>
+    </button>
 
-      <!-- Controls -->
-      <div class="controls">
-        <div class="progress-row">
-          <span class="time-label" id="time-current">0:00</span>
-          <div class="progress-track" id="progress-track">
-            <div class="progress-fill" id="progress-fill"></div>
-            <div class="progress-thumb" id="progress-thumb"></div>
-          </div>
-          <span class="time-label" id="time-total">0:00</span>
-        </div>
-        <div class="controls-row">
-          <div class="controls-left">
-            <button class="ctrl-btn" onclick="skipVideo(-10)" title="-10 ث">⏮</button>
-            <button class="ctrl-btn play-btn" id="btn-play" onclick="togglePlay()">▶</button>
-            <button class="ctrl-btn" onclick="skipVideo(10)" title="+10 ث">⏭</button>
-            <button class="ctrl-btn" id="btn-mute" onclick="toggleMute()">🔊</button>
-            <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="1" oninput="setVolume(this.value)" class="volume-slider" />
-            <span class="vol-pct" id="vol-pct">100%</span>
-          </div>
-          <div class="controls-right">
-            <button class="ctrl-btn small-btn" onclick="document.getElementById('file-input').click()" title="رفع فيديو جديد">⬆ تغيير</button>
-            <button class="ctrl-btn" onclick="toggleFullscreen()" title="ملء الشاشة (F)">⛶</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-tabs">
-        <button class="stab active" id="stab-chat" onclick="switchSidebarTab('chat')">💬 الدردشة</button>
-        <button class="stab" id="stab-participants" onclick="switchSidebarTab('participants')">👥 المشاركون</button>
-      </div>
-
-      <!-- Chat tab -->
-      <div class="stab-content active" id="scontent-chat">
-        <div class="messages" id="messages-list">
-          <div class="no-messages">لا توجد رسائل بعد</div>
-        </div>
-        <div class="chat-input-row">
-          <input id="chat-input" type="text" placeholder="اكتب رسالة... (Enter للإرسال)" maxlength="300" />
-          <button class="send-btn" onclick="sendMessage()">➤</button>
-        </div>
-      </div>
-
-      <!-- Participants tab -->
-      <div class="stab-content" id="scontent-participants">
-        <div class="participants-inner">
-          <ul class="participants-list" id="participants-list"></ul>
-        </div>
-      </div>
-    </aside>
-  </div>
-
-  <!-- Mobile sidebar toggle overlay -->
-  <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
-</div>
-
-<input type="file" id="file-input" accept="video/*" style="display:none" onchange="handleFileUpload(event)" />
-
-<script type="module" src="app.js"></script>
+    <!-- JS Link -->
+    <script src="script.js"></script>
 </body>
 </html>
