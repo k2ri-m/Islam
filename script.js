@@ -570,7 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadResources() {
         try {
-            const response = await fetch('/project-folder/wisdom.json');
+            const response = await fetch('wisdom.json');
             const data = await response.json();
             allWisdoms = data.wisdoms;
             
