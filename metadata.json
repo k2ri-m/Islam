@@ -1,0 +1,6 @@
+{
+  "name": "Noor Islam Portal",
+  "description": "A comprehensive, highly polished digital Islamic portal featuring prayer times, Quran explorer, Adhkar session manager, and spiritual wisdom.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
