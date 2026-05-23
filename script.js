@@ -5,81 +5,101 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Force scroll to top on load to ensure hero section is the starting point
+    window.scrollTo(0, 0);
+    window.location.hash = '#hero';
+
     // Current local time anchor for the system
     const systemStartTime = new Date("2026-05-23T13:46:16Z");
     let localTimeOffset = systemStartTime.getTime() - Date.now();
-
-    function getCurrentTime() {
-        return new Date(Date.now() + localTimeOffset);
+    
+    function getCairoTime() {
+        return new Date(new Date().toLocaleString("en-US", {timeZone: "Africa/Cairo"}));
     }
 
     // 1. LOADER CONTROLLER
     const loader = document.getElementById('loader');
     const loaderBar = document.getElementById('loader-bar');
-    let loadProgress = 0;
-
-    const loaderInterval = setInterval(() => {
-        loadProgress += Math.floor(Math.random() * 15) + 5;
-        if (loadProgress >= 100) {
-            loadProgress = 100;
-            clearInterval(loaderInterval);
-            setTimeout(() => {
-                loader.classList.add('fade-out');
-            }, 300);
-        }
-        loaderBar.style.width = `${loadProgress}%`;
-    }, 45);
-
+    if (loader && loaderBar) {
+        let loadProgress = 0;
+        const loaderInterval = setInterval(() => {
+            loadProgress += Math.floor(Math.random() * 15) + 5;
+            if (loadProgress >= 100) {
+                loadProgress = 100;
+                clearInterval(loaderInterval);
+                setTimeout(() => {
+                    loader.classList.add('fade-out');
+                }, 300);
+            }
+            loaderBar.style.width = `${loadProgress}%`;
+        }, 45);
+    }
 
     // 2. STICKY HEADER & ACTIVE SCROLL MAPPER
     const navbar = document.getElementById('navbar');
     const sections = document.querySelectorAll('section');
     const navLinks = document.querySelectorAll('.nav-link');
 
-    window.addEventListener('scroll', () => {
-        // Sticky transition
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-
-        // Active link highlighting based on viewport scroll
-        let currentActiveSectionId = 'hero';
-        sections.forEach(sec => {
-            const secTop = sec.offsetTop - 120;
-            const secHeight = sec.offsetHeight;
-            if (window.scrollY >= secTop && window.scrollY < secTop + secHeight) {
-                currentActiveSectionId = sec.getAttribute('id');
+    if (navbar) {
+        window.addEventListener('scroll', () => {
+            // Sticky transition
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
             }
-        });
 
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${currentActiveSectionId}`) {
-                link.classList.add('active');
-            }
-        });
-    });
+            // Active link highlighting based on viewport scroll
+            let currentActiveSectionId = 'hero';
+            sections.forEach(sec => {
+                const secTop = sec.offsetTop - 120;
+                const secHeight = sec.offsetHeight;
+                if (window.scrollY >= secTop && window.scrollY < secTop + secHeight) {
+                    currentActiveSectionId = sec.getAttribute('id');
+                }
+            });
 
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentActiveSectionId}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    }
 
     // 3. MOBILE TOGGLE MENU
     const mobileToggle = document.getElementById('mobile-toggle');
     const navMenu = document.getElementById('nav-menu');
 
-    mobileToggle.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
-        document.body.classList.toggle('mobile-nav-active');
-    });
+    if (mobileToggle && navMenu) {
+        mobileToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            document.body.classList.toggle('mobile-nav-active');
+        });
+    }
 
     // Close menu when clicking links
     navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.classList.remove('active');
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href');
+            const targetSec = targetId ? document.querySelector(targetId) : null;
+            
+            if (targetSec) {
+                const offset = 85; 
+                const targetPos = targetSec.offsetTop - offset;
+                
+                window.scrollTo({
+                    top: targetPos,
+                    behavior: 'smooth'
+                });
+            }
+
+            if (navMenu) navMenu.classList.remove('active');
             document.body.classList.remove('mobile-nav-active');
         });
     });
-
 
     // 4. DARK / LIGHT THEME TOGGLE
     const themeBtn = document.getElementById('theme-btn');
@@ -88,15 +108,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set initial
     document.body.className = savedTheme;
 
-    themeBtn.addEventListener('click', () => {
-        if (document.body.classList.contains('theme-dark')) {
-            document.body.className = 'theme-light';
-            localStorage.setItem('nur-islam-theme', 'theme-light');
-        } else {
-            document.body.className = 'theme-dark';
-            localStorage.setItem('nur-islam-theme', 'theme-dark');
-        }
-    });
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            if (document.body.classList.contains('theme-dark')) {
+                document.body.className = 'theme-light';
+                localStorage.setItem('nur-islam-theme', 'theme-light');
+            } else {
+                document.body.className = 'theme-dark';
+                localStorage.setItem('nur-islam-theme', 'theme-dark');
+            }
+        });
+    }
 
 
     // 5. LIVE DUAL DATE & PRAYER SCHEDULER
@@ -107,15 +129,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const countdownDisplay = document.getElementById('prayer-countdown');
     const nextPrayerDisplay = document.getElementById('next-prayer-title');
 
-    // Simulated standard accurate prayer schedule for today
-    const mockPrayers = [
-        { name: 'الفجر', time: '04:32', id: 'card-fajr', elementId: 'time-fajr' },
-        { name: 'الشروق', time: '05:58', id: 'card-sunrise', elementId: 'time-sunrise' },
-        { name: 'الظهر', time: '12:30', id: 'card-dhuhr', elementId: 'time-dhuhr' },
-        { name: 'العصر', time: '16:05', id: 'card-asr', elementId: 'time-asr' },
-        { name: 'المغرب', time: '19:02', id: 'card-maghrib', elementId: 'time-maghrib' },
-        { name: 'العشاء', time: '20:28', id: 'card-isha', elementId: 'time-isha' }
-    ];
+    // Updated prayer schedule for Cairo, Egypt
+    let currentPrayers = [];
+    let fetchedHijriDate = '';
+
+    async function fetchPrayerTimes() {
+        try {
+            const response = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Cairo&country=Egypt&method=5');
+            const data = await response.json();
+            const timings = data.data.timings;
+            const hijri = data.data.date.hijri;
+            
+            fetchedHijriDate = `${hijri.day} ${hijri.month.ar} ${hijri.year} هـ`;
+            
+            // Map to existing UI structures
+            currentPrayers = [
+                { name: 'الفجر', time: timings.Fajr, id: 'card-fajr', elementId: 'time-fajr' },
+                { name: 'الشروق', time: timings.Sunrise, id: 'card-sunrise', elementId: 'time-sunrise' },
+                { name: 'الظهر', time: timings.Dhuhr, id: 'card-dhuhr', elementId: 'time-dhuhr' },
+                { name: 'العصر', time: timings.Asr, id: 'card-asr', elementId: 'time-asr' },
+                { name: 'المغرب', time: timings.Maghrib, id: 'card-maghrib', elementId: 'time-maghrib' },
+                { name: 'العشاء', time: timings.Isha, id: 'card-isha', elementId: 'time-isha' }
+            ];
+            
+            // Set times once on cards
+            currentPrayers.forEach(p => {
+                const item = document.getElementById(p.elementId);
+                if (item) {
+                    // Conversion to 12Hr format for layout beautifulness
+                    const hrParts = p.time.split(':');
+                    let hr = parseInt(hrParts[0]);
+                    const minutes = hrParts[1];
+                    const pm = hr >= 12;
+                    hr = hr % 12;
+                    hr = hr ? hr : 12;
+                    item.textContent = `${String(hr).padStart(2, '0')}:${minutes} ${pm ? 'م' : 'ص'}`;
+                }
+            });
+        } catch (error) {
+            console.error('Error fetching prayer times:', error);
+        }
+    }
 
     // Simple robust Gregorian to Hijri estimation (For May 2026)
     // May 23, 2026 matches Dhu al-Qi'dah 6, 1447 AH
@@ -193,18 +247,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateDualClocks() {
-        const now = getCurrentTime();
+        const now = getCairoTime();
 
         // 1. Live Clocks updates
         liveTimeDisplay.textContent = formatTime12HrAr(now);
         liveGregorianDisplay.textContent = formatGregorianAr(now);
-        liveHijriDisplay.textContent = getHijriDateString(now);
+        liveHijriDisplay.textContent = fetchedHijriDate || getHijriDateString(now);
 
         // Update calendar layout full descriptors if elements exist
         const calHijriFull = document.getElementById('cal-hijri-full');
         const calGregFull = document.getElementById('cal-gregorian-full');
         if (calHijriFull) calHijriFull.textContent = getHijriDateString(now);
         if (calGregFull) calGregFull.textContent = formatGregorianAr(now);
+        
+        // --- Added check ---
+        if (currentPrayers.length === 0) return;
+        // -------------------
 
         // 2. Prayer Countdown logic
         const currentHr = now.getHours();
@@ -216,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let activePrayer = null;
 
         // Convert times to seconds and compare
-        const prayersWithSeconds = mockPrayers.map(p => {
+        const prayersWithSeconds = currentPrayers.map(p => {
             const parts = p.time.split(':');
             const sec = (parseInt(parts[0]) * 3600) + (parseInt(parts[1]) * 60);
             return { ...p, seconds: sec };
@@ -238,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Highlight Active in UI
-        mockPrayers.forEach(p => {
+        currentPrayers.forEach(p => {
             const el = document.getElementById(p.id);
             if (el) {
                 if (activePrayer && p.id === activePrayer.id) {
@@ -265,22 +323,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Set times once on cards
-    mockPrayers.forEach(p => {
-        const item = document.getElementById(p.elementId);
-        if (item) {
-            // Conversion to 12Hr format for layout beautifulness
-            const hrParts = p.time.split(':');
-            let hr = parseInt(hrParts[0]);
-            const minutes = hrParts[1];
-            const pm = hr >= 12;
-            hr = hr % 12;
-            hr = hr ? hr : 12;
-            item.textContent = `${String(hr).padStart(2, '0')}:${minutes} ${pm ? 'م' : 'ص'}`;
-        }
-    });
+    fetchPrayerTimes();
 
     setInterval(updateDualClocks, 1000);
     updateDualClocks();
+
 
 
     // 6. QURAN ENGINE
@@ -456,31 +503,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Connect search inputs
-    quranSearch.addEventListener('input', (e) => {
-        searchFilter = e.target.value;
-        if (searchFilter.trim() !== "") {
-            quranClear.style.display = "flex";
-        } else {
-            quranClear.style.display = "none";
-        }
-        drawSurahSidebar();
-    });
+    if (quranSearch) {
+        quranSearch.addEventListener('input', (e) => {
+            searchFilter = e.target.value;
+            if (searchFilter.trim() !== "") {
+                quranClear.style.display = "flex";
+            } else {
+                quranClear.style.display = "none";
+            }
+            drawSurahSidebar();
+        });
+    }
 
-    quranClear.addEventListener('click', () => {
-        quranSearch.value = "";
-        searchFilter = "";
-        quranClear.style.display = "none";
-        drawSurahSidebar();
-    });
+    if (quranClear) {
+        quranClear.addEventListener('click', () => {
+            quranSearch.value = "";
+            searchFilter = "";
+            quranClear.style.display = "none";
+            drawSurahSidebar();
+        });
+    }
 
     // Simulated Audio trigger
-    audioPlayBtn.addEventListener('click', () => {
-        if (isReciting) {
-            stopFakeAudio();
-        } else {
-            startFakeAudio();
-        }
-    });
+    if (audioPlayBtn) {
+        audioPlayBtn.addEventListener('click', () => {
+            if (isReciting) {
+                stopFakeAudio();
+            } else {
+                startFakeAudio();
+            }
+        });
+    }
 
     function startFakeAudio() {
         isReciting = true;
@@ -509,62 +562,57 @@ document.addEventListener('DOMContentLoaded', () => {
     selectSurah(surahDatabase[0]);
 
 
-    // 7. HADITH OF THE DAY ENGINE
-    const hadithAr = document.getElementById('hadith-txt-ar');
-    const hadithEn = document.getElementById('hadith-txt-en');
-    const hadithAuthor = document.getElementById('hadith-author');
-    const generateHadithBtn = document.getElementById('generate-hadith');
+    // 7. HADITH OF THE DAY & WISDOMS ENGINE
+    let allWisdoms = [];
+    const wisdomsList = document.getElementById('wisdoms-list');
+    const hadithContainer = document.getElementById('hadith-content');
+    const hadithBtn = document.getElementById('generate-hadith');
 
-    // Authentically sourced short Hadiths
-    const hadithDatabase = [
-        {
-            ar: "«إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى»",
-            en: "\"Actions are judged by motives, and each person will receive rewards according to his intentions.\"",
-            source: "رواه البخاري (حديث ١)"
-        },
-        {
-            ar: "«الْمُسْلِمُ مَنْ سَلِمَ الْمُسْلِمُونَ مِنْ لِسَانِهِ وَيَدِهِ»",
-            en: "\"A true Muslim is the one from whose tongue and hands other Muslims are safe.\"",
-            source: "رواه البخاري (حديث ١٠)"
-        },
-        {
-            ar: "«لاَ يُؤْمِنُ أَحَدُكُمْ حَتَّى يُحِبَّ لأَخِيهِ مَا يُحِبُّ لِنَفْسِهِ»",
-            en: "\"None of you truly believes until he loves for his brother what he loves for himself.\"",
-            source: "رواه البخاري (حديث ١٣)"
-        },
-        {
-            ar: "«مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ»",
-            en: "\"He who believes in Allah and the Last Day must either speak good or remain silent.\"",
-            source: "رواه مسلم (حديث ٤٧)"
-        },
-        {
-            ar: "«اتَّقِ اللَّهَ حَيْثُمَا كُنْتَ، وَأَتْبِعِ السَّيِّئَةَ الْحَسَنَةَ تَمْحُهَا»",
-            en: "\"Fear Allah wherever you are, and follow up an evil deed with a good one to wipe it out.\"",
-            source: "رواه الترمذي (حديث ١٩٨٧)"
+    async function loadResources() {
+        try {
+            const response = await fetch('/project-folder/wisdom.json');
+            const data = await response.json();
+            allWisdoms = data.wisdoms;
+            
+            renderWisdoms();
+            renderHadith();
+        } catch (e) {
+            console.error("Could not load resources", e);
         }
-    ];
+    }
 
-    generateHadithBtn.addEventListener('click', () => {
-        // Simple rotation animation visual anchor
-        const container = document.getElementById('hadith-container');
-        container.style.opacity = '0';
-        container.style.transform = 'scale(0.98)';
+    function renderWisdoms() {
+        const shuffled = [...allWisdoms].sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 9);
+
+        if (wisdomsList) {
+            wisdomsList.innerHTML = selected.map(w => `
+                <div class="wisdom-card">
+                    <p class="wisdom-text">${w.ar}</p>
+                    <span class="wisdom-source">${w.source}</span>
+                </div>
+            `).join('');
+        }
+    }
+
+    function renderHadith() {
+        if (!allWisdoms.length) return;
+        const randomHadith = allWisdoms[Math.floor(Math.random() * allWisdoms.length)];
         
-        setTimeout(() => {
-            let randIndex;
-            do {
-                randIndex = Math.floor(Math.random() * hadithDatabase.length);
-            } while (hadithEn.textContent === hadithDatabase[randIndex].en && hadithDatabase.length > 1);
+        if (hadithContainer) {
+            hadithContainer.innerHTML = `
+                <span class="hadith-arabic font-serif" id="hadith-txt-ar">${randomHadith.ar}</span>
+                <p class="hadith-english" id="hadith-txt-en">"${randomHadith.en}"</p>
+                <cite class="hadith-narrator" id="hadith-author">${randomHadith.source}</cite>
+            `;
+        }
+    }
 
-            const chosen = hadithDatabase[randIndex];
-            hadithAr.textContent = chosen.ar;
-            hadithEn.textContent = chosen.en;
-            hadithAuthor.textContent = chosen.source;
-
-            container.style.opacity = '1';
-            container.style.transform = 'scale(1)';
-        }, 300);
-    });
+    if (hadithBtn) {
+        hadithBtn.addEventListener('click', renderHadith);
+    }
+    
+    loadResources();
 
 
     // 8. INTERACTIVE TASBEEH COUNTER & WEB AUDIO FX
@@ -606,9 +654,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         activeDhikrAr.textContent = activeDhikrLabelAr;
 
-        // Progress ring tracking
+        // Progress ring tracking - dynamic radius support
+        const ringRadius = parseFloat(getComputedStyle(ringBar).r) || 95;
+        const circ = 2 * Math.PI * ringRadius;
         const percentageFilled = Math.min(currentCount / targetCountGoal, 1);
-        const offset = ringMaxCircumference - (percentageFilled * ringMaxCircumference);
+        const offset = circ - (percentageFilled * circ);
+        
+        ringBar.style.strokeDasharray = circ;
         ringBar.style.strokeDashoffset = offset;
 
         // Toggle sound SVG indicator
@@ -651,57 +703,67 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    incrementBtn.addEventListener('click', (e) => {
-        currentCount++;
-        playTactileSynthesizer();
+    if (incrementBtn) {
+        incrementBtn.addEventListener('click', (e) => {
+            currentCount++;
+            playTactileSynthesizer();
 
-        // Active ripple layout animation
-        const ripple = document.getElementById('ripple');
-        ripple.classList.add('active');
-        setTimeout(() => { ripple.classList.remove('active'); }, 100);
+            // Active ripple layout animation
+            const ripple = document.getElementById('ripple');
+            if (ripple) {
+                ripple.classList.add('active');
+                setTimeout(() => { ripple.classList.remove('active'); }, 100);
+            }
+            
+            saveTasbeehState();
+            updateDigitalCounterLayout();
+        });
+    }
 
-        saveTasbeehState();
-        updateDigitalCounterLayout();
-    });
-
-    resetBtn.addEventListener('click', () => {
-        currentCount = 0;
-        playTactileSynthesizer();
-        saveTasbeehState();
-        updateDigitalCounterLayout();
-    });
-
-    soundToggle.addEventListener('click', () => {
-        isSoundMuted = !isSoundMuted;
-        saveTasbeehState();
-        updateDigitalCounterLayout();
-    });
-
-    // Preset options choosing
-    const presetButtons = presetGroup.querySelectorAll('.dhikr-btn-preset');
-    presetButtons.forEach(btn => {
-        // Sync active highlight initial
-        const btnEn = btn.getAttribute('data-dhikr-en');
-        if (btnEn === activeDhikrLabelEn) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
-
-        btn.addEventListener('click', () => {
-            presetButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            activeDhikrLabelAr = btn.getAttribute('data-dhikr-ar');
-            activeDhikrLabelEn = btnEn;
-            targetCountGoal = parseInt(btn.getAttribute('data-target-count'));
-            currentCount = 0; // Reset count upon shifting theme
-
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            currentCount = 0;
             playTactileSynthesizer();
             saveTasbeehState();
             updateDigitalCounterLayout();
         });
-    });
+    }
+
+    if (soundToggle) {
+        soundToggle.addEventListener('click', () => {
+            isSoundMuted = !isSoundMuted;
+            saveTasbeehState();
+            updateDigitalCounterLayout();
+        });
+    }
+
+    // Preset options choosing
+    if (presetGroup) {
+        const presetButtons = presetGroup.querySelectorAll('.dhikr-btn-preset');
+        presetButtons.forEach(btn => {
+            // Sync active highlight initial
+            const btnEn = btn.getAttribute('data-dhikr-en');
+            if (btnEn === activeDhikrLabelEn) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+
+            btn.addEventListener('click', () => {
+                presetButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                activeDhikrLabelAr = btn.getAttribute('data-dhikr-ar');
+                activeDhikrLabelEn = btnEn;
+                targetCountGoal = parseInt(btn.getAttribute('data-target-count'));
+                currentCount = 0; // Reset count upon shifting theme
+
+                playTactileSynthesizer();
+                saveTasbeehState();
+                updateDigitalCounterLayout();
+            });
+        });
+    }
 
     // Setup initial layout
     updateDigitalCounterLayout();
@@ -748,7 +810,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 2. Generate actual day cells
-        const todayDateObj = getCurrentTime();
+        const todayDateObj = getCairoTime();
         
         for (let d = 1; d <= daysInMonthLength; d++) {
             const cell = document.createElement('div');
@@ -823,8 +885,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const sliderPrevBtn = document.getElementById('slider-prev-btn');
     const sliderNextBtn = document.getElementById('slider-next-btn');
 
-    const slides = Array.from(sliderWrapper.querySelectorAll('.quote-slide'));
-    const dots = Array.from(sliderDotsGroup.querySelectorAll('.dot'));
+    const slides = sliderWrapper ? Array.from(sliderWrapper.querySelectorAll('.quote-slide')) : [];
+    const dots = sliderDotsGroup ? Array.from(sliderDotsGroup.querySelectorAll('.dot')) : [];
     let activeSlideIndex = 0;
     let autoSlideInterval = null;
 
@@ -874,15 +936,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    sliderNextBtn.addEventListener('click', () => {
-        shiftToNextQuote();
-        startQuoteAutoRotation(); // Reset timer upon manual clicking
-    });
+    if (sliderNextBtn) {
+        sliderNextBtn.addEventListener('click', () => {
+            shiftToNextQuote();
+            startQuoteAutoRotation(); // Reset timer upon manual clicking
+        });
+    }
 
-    sliderPrevBtn.addEventListener('click', () => {
-        shiftToPrevQuote();
-        startQuoteAutoRotation();
-    });
+    if (sliderPrevBtn) {
+        sliderPrevBtn.addEventListener('click', () => {
+            shiftToPrevQuote();
+            startQuoteAutoRotation();
+        });
+    }
 
     dots.forEach((dot, idx) => {
         dot.addEventListener('click', () => {
@@ -894,285 +960,236 @@ document.addEventListener('DOMContentLoaded', () => {
 
     startQuoteAutoRotation();
 
+    // View Switcher logic (Simulating "Separate Page")
+    const homeView = document.getElementById('home-view');
+    const adhkarView = document.getElementById('adhkar-view');
+    const navbarFull = document.getElementById('navbar');
 
-    // 11. ADHKAR MORNING & EVENING INTERACTIVE ENGINE
-    const adhkarDatabase = {
-        morning: [
-            {
-                id: "m1",
-                title: "آية الكرسي",
-                text: "أَعُوذُ بِاللهِ مِنَ الشَّيْطَانِ الرَّجِيمِ: {اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ}",
-                reward: "من قالها حين يصبح أجير من الجن حتى يمسي.",
-                count: 1
-            },
-            {
-                id: "m2",
-                title: "الإخلاص والمعوذتين",
-                text: "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ {قُلْ هُوَ اللَّهُ أَحَدٌ...}، {قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ...}، {قُلْ أَعُوذُ بِرَبِّ النَّاسِ...}",
-                reward: "تكفيك من كل شيء (تُقرأ ثلاث مرات).",
-                count: 3
-            },
-            {
-                id: "m3",
-                title: "سيد الاستغفار",
-                text: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ.",
-                reward: "من قالها موقنا بها حين يصبح فمات من يومه دخل الجنة.",
-                count: 1
-            },
-            {
-                id: "m4",
-                title: "دعاء العافية والستر",
-                text: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي وَآمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَيْنَ يَدَيَّ، وَمِنْ خَلْفِي، وَعَنْ يَمِينِي، وَعَنْ شِمَالِي، وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي.",
-                reward: "حفظ شامل وعافية من كُلِّ سوء وبلاء.",
-                count: 1
-            },
-            {
-                id: "m5",
-                title: "اسم الله لدفع الضر",
-                text: "بِسْمِ اللهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ.",
-                reward: "لم يضره شيء في ذلك اليوم (تُقرأ ثلاث مرات).",
-                count: 3
-            },
-            {
-                id: "m6",
-                title: "الرضا بالله والرسول والديّن",
-                text: "رَضِيتُ بِاللهِ رَبّاً، وَبِالْإِسْلَامِ دِيناً، وَبِمُحَمَّدٍ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ نَبِيّاً.",
-                reward: "كان حقاً على الله أن يرضيه يوم القيامة (تُقرأ ثلاث مرات).",
-                count: 3
-            }
-        ],
-        evening: [
-            {
-                id: "e1",
-                title: "آية الكرسي",
-                text: "أَعُوذُ بِاللهِ مِنَ الشَّيْطَانِ الرَّجِيمِ: {اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ}",
-                reward: "من قالها حين يمسي أجير من الجن حتى يصبح.",
-                count: 1
-            },
-            {
-                id: "e2",
-                title: "الإخلاص والمعوذتين",
-                text: "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ {قُلْ هُوَ اللَّهُ أَحَدٌ...}، {قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ...}، {قُلْ أَعُوذُ بِرَبِّ النَّاسِ...}",
-                reward: "تكفيك من كل شيء (تُقرأ ثلاث مرات).",
-                count: 3
-            },
-            {
-                id: "e3",
-                title: "سيد الاستغفار",
-                text: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ.",
-                reward: "من قالها موقنا بها حين يمسي فمات من ليلته دخل الجنة.",
-                count: 1
-            },
-            {
-                id: "e4",
-                title: "الاستعاذة بكلمات الله التامات من شر ما خلق",
-                text: "أَعُوذُ بِكَلِمَاتِ اللهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ.",
-                reward: "لم تضره حمة لو لدغته في تلك الليلة (تُقرأ ثلاث مرات).",
-                count: 3
-            },
-            {
-                id: "e5",
-                title: "اسم الله كفاية فجأة البلاء",
-                text: "بِسْمِ اللهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ.",
-                reward: "لا يصيبه فجأة بلاء حتى يصبح (تُقرأ ثلاث مرات).",
-                count: 3
-            },
-            {
-                id: "e6",
-                title: "الصلاة على النبي ﷺ",
-                text: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ.",
-                reward: "أدركته شفاعة النبي ﷺ يوم القيامة (تُقرأ عشر مرات).",
-                count: 10
-            }
-        ]
+    window.switchToAdhkarView = () => {
+        if (homeView && adhkarView) {
+            homeView.classList.add('view-hidden');
+            adhkarView.classList.remove('view-hidden');
+            if (navbarFull) navbarFull.style.display = 'none';
+            window.scrollTo(0, 0);
+            renderCurrentAdhkar();
+        }
     };
 
-    let activeAdhkarTab = 'morning';
+    window.switchToHomeView = () => {
+        if (homeView && adhkarView) {
+            adhkarView.classList.add('view-hidden');
+            homeView.classList.remove('view-hidden');
+            if (navbarFull) navbarFull.style.display = 'flex';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
 
-    const tabMorningBtn = document.getElementById('tab-morning');
-    const tabEveningBtn = document.getElementById('tab-evening');
-    const adhkarCardsList = document.getElementById('adhkar-cards-list');
-    const adhkarProgressText = document.getElementById('adhkar-progress-text');
-    const adhkarProgressBar = document.getElementById('adhkar-progress-bar');
-    const adhkarGlobalReset = document.getElementById('adhkar-global-reset');
 
-    function getAdhkarProgress(id) {
-        return parseInt(localStorage.getItem(`nur_islam_adh_prog_${id}`)) || 0;
+    // 11. ADHKAR MORNING & EVENING INTERACTIVE ENGINE
+    const adhkarListPage = document.getElementById('adhkar-page-list');
+    let currentAdhkarData = { morning: [], evening: [] };
+
+    async function loadAdhkarData() {
+        try {
+            const response = await fetch('adhkar.json');
+            currentAdhkarData = await response.json();
+            showAdhkar('morning');
+        } catch (e) {
+            console.error("Adhkar data fetch failed", e);
+        }
     }
 
-    function setAdhkarProgress(id, val) {
-        localStorage.setItem(`nur_islam_adh_prog_${id}`, val);
-    }
+    let currentAdhkarIndex = 0;
+    let currentAdhkarType = 'morning';
 
-    function renderAdhkarList() {
-        if (!adhkarCardsList) return;
-        adhkarCardsList.innerHTML = "";
-        const list = adhkarDatabase[activeAdhkarTab];
-        let completedCount = 0;
+    window.showAdhkar = (type, event, index = 0) => {
+        currentAdhkarType = type;
+        currentAdhkarIndex = index;
+        
+        // Update tab buttons in Adhkar View
+        document.querySelectorAll('.tab-btn-page').forEach(btn => btn.classList.remove('active'));
+        const targetBtnId = type === 'morning' ? 'btn-morning' : 'btn-evening';
+        const targetBtn = document.getElementById(targetBtnId);
+        if (targetBtn) targetBtn.classList.add('active');
+        
+        renderCurrentAdhkar();
+    };
 
-        list.forEach(adh => {
-            const currentProgress = getAdhkarProgress(adh.id);
-            const isCompleted = currentProgress >= adh.count;
-            if (isCompleted) completedCount++;
+    function renderCurrentAdhkar() {
+        if (!currentAdhkarData[currentAdhkarType] || currentAdhkarData[currentAdhkarType].length === 0) return;
+        if (!adhkarListPage) return;
 
-            const card = document.createElement('div');
-            card.className = `donation-glass-card adhkar-card ${isCompleted ? 'completed-card' : ''}`;
-            card.style.display = "flex";
-            card.style.flexDirection = "column";
-            card.style.justifyContent = "space-between";
-            card.style.gap = "1.5rem";
-            card.style.padding = "2rem";
-            card.style.borderRadius = "var(--border-radius-card)";
-            card.style.background = "var(--glass-bg)";
-            card.style.border = isCompleted ? "1.5px solid var(--color-success)" : "1px solid var(--glass-border)";
-            card.style.transition = "all 0.35s cubic-bezier(0.16, 1, 0.3, 1)";
+        const list = currentAdhkarData[currentAdhkarType];
+        const item = list[currentAdhkarIndex];
+        const currentCount = parseInt(localStorage.getItem(`adhkar-${currentAdhkarType}-${currentAdhkarIndex}`) || 0);
+        
+        // Calculate smooth progress: completed items + fraction of current item
+        const itemProgress = Math.min(currentCount / item.total, 1);
+        const totalProgress = ((currentAdhkarIndex + itemProgress) / list.length) * 100;
+        
+        const isCompleted = currentCount >= item.total;
 
-            card.innerHTML = `
-                <div class="adhkar-card-top" style="display:flex; flex-direction:column; gap:0.75rem;">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h4 class="font-title text-gold" style="font-size:1.15rem; font-weight:600;">${adh.title}</h4>
-                        <span class="badge" style="font-size:0.75rem; padding:0.25rem 0.65rem; border-radius:100px; background:rgba(212,163,89,0.12); color:var(--color-accent-gold); font-weight:500;">
-                            تكرار: ${adh.count} ${adh.count === 1 ? 'مرة' : (adh.count <= 10 ? 'مرات' : 'مرة')}
-                        </span>
-                    </div>
-                    <p class="font-serif" style="font-size:1.2rem; line-height:2.2; color:var(--color-text-white); margin-top:0.75rem; text-align:justify; direction:rtl;">
-                        ${adh.text}
-                    </p>
-                    <div style="border-top:1px solid rgba(255,255,255,0.06); padding-top:0.75rem; margin-top:0.5rem;">
-                        <span style="font-size:0.8rem; color:rgba(255,255,255,0.45); line-height:1.6; display:block;">
-                            <strong>الفضل:</strong> ${adh.reward}
-                        </span>
-                    </div>
+        adhkarListPage.innerHTML = `
+            <div class="adhkar-focus-card" id="adhkar-card-focus">
+                <div class="adhkar-progress-bar-container">
+                    <div class="adhkar-progress-fill" id="adhkar-progress-bar" style="width: ${totalProgress}%"></div>
                 </div>
+                
+                <div class="adhkar-counter-badge">${currentAdhkarIndex + 1} / ${list.length}</div>
+                
+                <p class="adhkar-text-large" id="adhkar-main-text">${item.text}</p>
+                
+                <div class="adhkar-controls">
+                    <button class="control-btn" onclick="prevAdhkar()" ${currentAdhkarIndex === 0 ? 'disabled' : ''} aria-label="الذكر السابق">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                        <span class="hidden-mobile">السابق</span>
+                    </button>
+                    
+                    <button class="increment-main-btn ${isCompleted ? 'completed' : ''}" 
+                            id="adhkar-increment-btn"
+                            onclick="incrementAdhkar('${currentAdhkarType}', ${currentAdhkarIndex}, ${item.total})">
+                        <span class="curr-val" id="adhkar-focus-count">${currentCount}</span>
+                        <span class="total-val">/ ${item.total}</span>
+                    </button>
 
-                <div class="adhkar-card-bottom" style="display:flex; justify-content:space-between; align-items:center; gap:0.75rem; margin-top:auto;">
-                    <span style="font-size:0.85rem; color:rgba(255,255,255,0.6);">
-                        التقدم: <strong class="text-gold" style="font-size:1.15rem;">${currentProgress}</strong> / ${adh.count}
-                    </span>
-                    <button class="btn ${isCompleted ? 'btn-secondary' : 'btn-primary'} adh-counter-btn" data-id="${adh.id}" data-max="${adh.count}" style="padding:0.6rem 1.2rem; font-size:0.9rem; border-radius:100px; display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; min-width:105px; justify-content:center; transition:all 0.25s ease;">
-                        ${isCompleted ? `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" style="display:inline-block; vertical-align:middle;"><polyline points="20 6 9 17 4 12" /></svg> مكتمل` : `اضغط للتكرار`}
+                    <button class="control-btn" onclick="nextAdhkar()" ${currentAdhkarIndex === list.length - 1 ? 'disabled' : ''} aria-label="الذكر التالي">
+                        <span class="hidden-mobile">التالي</span>
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
                     </button>
                 </div>
-            `;
-
-            // Setup counter click listener
-            const clickBtn = card.querySelector('.adh-counter-btn');
-            clickBtn.addEventListener('click', () => {
-                let prog = getAdhkarProgress(adh.id);
-                if (prog < adh.count) {
-                    prog++;
-                    setAdhkarProgress(adh.id, prog);
-                    playTactileSynthesizer(); // Beautiful sound feedback!
-
-                    if (prog === adh.count) {
-                        card.style.transform = "scale(1.02)";
-                        setTimeout(() => { card.style.transform = "scale(1)"; }, 200);
-                    }
-
-                    renderAdhkarList();
-                }
-            });
-
-            adhkarCardsList.appendChild(card);
-        });
-
-        // Update overall progress bar
-        const perc = list.length > 0 ? (completedCount / list.length) * 100 : 0;
-        if (adhkarProgressBar) adhkarProgressBar.style.width = `${perc}%`;
-        if (adhkarProgressText) {
-            adhkarProgressText.innerHTML = `أتممت <span class="text-gold font-bold" style="font-size:1.05rem;">${completedCount}</span> من <span class="text-gold font-bold" style="font-size:1.05rem;">${list.length}</span> أذكار ${activeAdhkarTab === 'morning' ? 'الصباح' : 'المساء'}`;
-        }
+                
+                ${isCompleted ? '<div class="completion-stamp animate-bounce">تم الذكر ✓</div>' : ''}
+                <p class="adhkar-source text-muted mt-4" style="font-size: 0.8rem; opacity: 0.7;">${item.source || ''}</p>
+            </div>
+        `;
     }
 
-    function switchAdhkarTab(tabName) {
-        activeAdhkarTab = tabName;
-        if (activeAdhkarTab === 'morning') {
-            tabMorningBtn && tabMorningBtn.classList.add('active');
-            tabEveningBtn && tabEveningBtn.classList.remove('active');
-        } else {
-            tabEveningBtn && tabEveningBtn.classList.add('active');
-            tabMorningBtn && tabMorningBtn.classList.remove('active');
-        }
-        renderAdhkarList();
-    }
-
-    if (tabMorningBtn) tabMorningBtn.addEventListener('click', () => switchAdhkarTab('morning'));
-    if (tabEveningBtn) tabEveningBtn.addEventListener('click', () => switchAdhkarTab('evening'));
-
-    if (adhkarGlobalReset) {
-        adhkarGlobalReset.addEventListener('click', () => {
-            const list = adhkarDatabase[activeAdhkarTab];
-            list.forEach(adh => setAdhkarProgress(adh.id, 0));
-            playTactileSynthesizer();
-            renderAdhkarList();
-        });
-    }
-
-    renderAdhkarList();
-
-    // 12. CONTACT FORM VALIDATOR
-    const contactForm = document.getElementById('islamic-contact-form');
-    const alertSuccessBox = document.getElementById('contact-success-box');
-
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        // Fetch values
-        const fName = document.getElementById('usr-name');
-        const fEmail = document.getElementById('usr-email');
-        const fSubject = document.getElementById('usr-subject');
-        const fMessage = document.getElementById('usr-message');
-
-        // Reset errors
-        const errorMsgs = document.querySelectorAll('.field-error-msg');
-        errorMsgs.forEach(msg => msg.style.display = "none");
-
-        let hasError = false;
-
-        if (fName.value.trim() === "") {
-            document.getElementById('err-name').style.display = "block";
-            hasError = true;
-        }
-
-        const emailFilter = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailFilter.test(fEmail.value.trim())) {
-            document.getElementById('err-email').style.display = "block";
-            hasError = true;
-        }
-
-        if (fSubject.value.trim() === "") {
-            document.getElementById('err-subject').style.display = "block";
-            hasError = true;
-        }
-
-        if (fMessage.value.trim() === "") {
-            document.getElementById('err-message').style.display = "block";
-            hasError = true;
-        }
-
-        if (!hasError) {
-            // Success alert triggered
-            alertSuccessBox.classList.remove('hidden');
+    window.nextAdhkar = () => {
+        if (currentAdhkarIndex < currentAdhkarData[currentAdhkarType].length - 1) {
+            const card = document.getElementById('adhkar-card-focus');
+            if (card) {
+                card.style.opacity = '0';
+                card.style.transform = 'translateX(-20px)';
+            }
             
-            // Log local mock DB details
-            console.log("Portal Message Logged:", {
-                sender: fName.value.trim(),
-                email: fEmail.value.trim(),
-                subject: fSubject.value.trim(),
-                body: fMessage.value.trim(),
-                loggedAt: getCurrentTime().toISOString()
-            });
-
-            // Wipe fields clean
-            contactForm.reset();
-
-            // Auto fadeout positive alert box after some seconds
             setTimeout(() => {
-                alertSuccessBox.classList.add('hidden');
-            }, 8000);
+                currentAdhkarIndex++;
+                renderCurrentAdhkar();
+                const newCard = document.getElementById('adhkar-card-focus');
+                if (newCard) {
+                    newCard.style.opacity = '0';
+                    newCard.style.transform = 'translateX(20px)';
+                    setTimeout(() => {
+                        newCard.style.opacity = '1';
+                        newCard.style.transform = 'translateX(0)';
+                    }, 50);
+                }
+            }, 300);
         }
-    });
+    };
+    
+    window.prevAdhkar = () => {
+        if (currentAdhkarIndex > 0) {
+            const card = document.getElementById('adhkar-card-focus');
+            if (card) {
+                card.style.opacity = '0';
+                card.style.transform = 'translateX(20px)';
+            }
+            
+            setTimeout(() => {
+                currentAdhkarIndex--;
+                renderCurrentAdhkar();
+                const newCard = document.getElementById('adhkar-card-focus');
+                if (newCard) {
+                    newCard.style.opacity = '0';
+                    newCard.style.transform = 'translateX(-20px)';
+                    setTimeout(() => {
+                        newCard.style.opacity = '1';
+                        newCard.style.transform = 'translateX(0)';
+                    }, 50);
+                }
+            }, 300);
+        }
+    };
 
+    window.incrementAdhkar = (type, index, total) => {
+        let count = parseInt(localStorage.getItem(`adhkar-${type}-${index}`) || 0);
+        const btn = document.getElementById('adhkar-increment-btn');
+        const list = currentAdhkarData[currentAdhkarType];
+        
+        if (count < total) {
+            count++;
+            localStorage.setItem(`adhkar-${type}-${index}`, count);
+            const countEl = document.getElementById(`adhkar-focus-count`);
+            
+            // Real-time progress bar update
+            const progressBar = document.getElementById('adhkar-progress-bar');
+            if (progressBar && list) {
+                const itemProgress = Math.min(count / total, 1);
+                const totalProgress = ((index + itemProgress) / list.length) * 100;
+                progressBar.style.width = `${totalProgress}%`;
+                
+                // Visual feedback for progress bar
+                if (count >= total) {
+                    progressBar.style.background = 'var(--color-accent-emerald)';
+                }
+            }
+
+            if (countEl) {
+                countEl.textContent = count;
+                // Simple pop animation
+                countEl.style.transform = 'scale(1.2)';
+                setTimeout(() => countEl.style.transform = 'scale(1)', 100);
+            }
+            
+            if (count >= total) {
+                if (btn) btn.classList.add('completed');
+                setTimeout(() => {
+                    renderCurrentAdhkar(); // Re-render after a tiny delay to show completion stamp
+                }, 200);
+                
+                // Vibrate if supported
+                if ("vibrate" in navigator) {
+                    navigator.vibrate(100);
+                }
+            }
+        } else {
+            // Shake if already completed
+            if (btn) {
+                btn.classList.add('animate-shake');
+                setTimeout(() => btn.classList.remove('animate-shake'), 400);
+            }
+        }
+    };
+
+    loadAdhkarData();
+
+    // 12. CONTACT FORM
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(contactForm);
+            // alert('تم إرسال الرسالة بنجاح.');
+            const btn = contactForm.querySelector('button');
+            if (btn) {
+                const originalText = btn.textContent;
+                btn.textContent = 'تم الإرسال ✓';
+                btn.classList.add('btn-success');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('btn-success');
+                }, 3000);
+            }
+            contactForm.reset();
+        });
+    }
+
+    startQuoteAutoRotation();
 
     // 13. BACK TO TOP BUTTON
     const backToTopBtn = document.getElementById('back-to-top');
@@ -1190,6 +1207,11 @@ document.addEventListener('DOMContentLoaded', () => {
             top: 0,
             behavior: 'smooth'
         });
+    });
+
+    // Ensure the page starts at the top when fully loaded
+    window.addEventListener('load', () => {
+        window.scrollTo(0, 0);
     });
 
 });

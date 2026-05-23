@@ -9,7 +9,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital@0;1&family=Cinzel+Decorative:wght@400;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital@0;1&family=Cinzel+Decorative:wght@400;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cairo:wght@200..1000&family=Readex+Pro:wght@200..700&display=swap" rel="stylesheet">
 </head>
 <body class="theme-dark">
 
@@ -33,9 +33,6 @@
 
     <!-- Sticky Header / Navbar -->
     <header class="header" id="navbar">
-        <div class="top-bismillah-bar">
-            <span>بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span>
-        </div>
         <div class="navbar-container">
             <a href="#" class="nav-logo" id="nav-logo">
                 <!-- Custom elegant Moon Crescent & Star Islamic emblem -->
@@ -72,10 +69,10 @@
                     <li><a href="#quran" class="nav-link">القرآن الكريم</a></li>
                     <li><a href="#hadith" class="nav-link">الحديث الشريف</a></li>
                     <li><a href="#tasbeeh" class="nav-link">السبحة الإلكترونية</a></li>
+                    <li><a href="#adhkar-home" class="nav-link">أذكار اليوم</a></li>
                     <li><a href="#calendar" class="nav-link">التقويم الهجري</a></li>
                     <li><a href="#quotes" class="nav-link">حكم وعظات</a></li>
-                    <li><a href="#adhkar" class="nav-link">أذكار اليوم</a></li>
-                    <li><a href="#contact" class="nav-link">اتصل بنا</a></li>
+                    <li><a href="#contact" class="nav-link">تواصل معنا</a></li>
                 </ul>
             </nav>
 
@@ -102,7 +99,8 @@
     </header>
 
     <!-- Main Content -->
-    <main>
+    <div id="home-view">
+        <main>
 
         <!-- 1. Hero / Home Section -->
         <section class="hero-section" id="hero">
@@ -114,19 +112,19 @@
             <div class="hero-content container">
                 <!-- Golden Bismillah Calligraphy Decorative Box -->
                 <div class="bismillah-wrapper animate-fade-in">
-                    <svg class="bismillah-svg" viewBox="0 0 100 35" width="240" height="84">
+                    <svg class="bismillah-svg bismillah-svg-animated" viewBox="0 0 140 35" width="300" height="84">
                         <!-- Custom vector style representing the beautiful layout of Bismillah text -->
-                        <path d="M10,18 C15,12 25,12 35,16 C45,20 55,20 65,16 C75,12 85,12 90,18" fill="none" stroke="url(#goldGradient)" stroke-width="1.5" />
-                        <text x="50" y="22" font-family="'Amiri', serif" font-size="20" fill="url(#goldGradient)" text-anchor="middle" font-weight="bold">بسم الله الرحمن الرحيم</text>
-                        <circle cx="20" cy="15" r="1.5" fill="var(--color-accent-gold)" />
-                        <circle cx="80" cy="15" r="1.5" fill="var(--color-accent-gold)" />
+                        <path d="M10,18 C25,10 50,10 70,18 C90,26 115,26 130,18" fill="none" stroke="url(#goldGradient)" stroke-width="1.5" />
+                        <text x="70" y="22" font-family="'Amiri', serif" font-size="20" fill="url(#goldGradient)" text-anchor="middle" font-weight="bold">بسم الله الرحمن الرحيم</text>
+                        <circle cx="15" cy="18" r="1.5" fill="var(--color-accent-gold)" />
+                        <circle cx="125" cy="18" r="1.5" fill="var(--color-accent-gold)" />
                     </svg>
                 </div>
 
                 <div class="title-animation-box">
                     <p class="hero-badge animate-fade-in-up">مرحباً بكم في بوابة نور الإسلام</p>
                     <h1 class="hero-title font-title animate-text" id="animate-main-title">
-                        بوابتك الرقمية إلى <span class="text-gold">الطمأنينة الروحية</span>
+                        نور الإسلام الرقمي
                     </h1>
                 </div>
 
@@ -472,6 +470,23 @@
         </section>
 
 
+        <!-- 8. Adhkar Entry Point Section -->
+        <section class="section adhkar-entry-section" id="adhkar-home">
+            <div class="container">
+                <div class="adhkar-promo-card">
+                    <div class="promo-content">
+                        <h2 class="promo-title font-title">الأذكار والتحصين</h2>
+                        <p class="promo-desc">ابدأ يومك بذكار الصباح وتحصن في المساء بخطة ذكر منظمة وسهلة التصفح.</p>
+                        <div class="promo-buttons">
+                            <button onclick="switchToAdhkarView(); showAdhkar('morning')" class="btn btn-primary btn-large">أذكار الصباح</button>
+                            <button onclick="switchToAdhkarView(); showAdhkar('evening')" class="btn btn-secondary btn-large">أذكار المساء</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
         <!-- 6. Islamic hijri Calendar Section -->
         <section class="section calendar-section" id="calendar">
             <div class="container">
@@ -565,7 +580,6 @@
             </div>
         </section>
 
-
         <!-- 7. Islamic Quotes Slider Section -->
         <section class="section quotes-section" id="quotes">
             <div class="gradient-overlay-accent"></div>
@@ -575,200 +589,57 @@
                     <p class="section-desc">مواعظ واقتباسات تنير القلوب وتغذي العقول بالحكمة والسلام.</p>
                 </div>
 
-                <div class="quotes-slider-layout">
-                    <!-- Main slider display card -->
-                    <div class="slider-display-card">
-                        <!-- Sliding cards -->
-                        <div class="slider-items-wrapper" id="slider-wrapper">
-                            <div class="quote-slide active">
-                                <p class="quote-text-main font-serif">"خياركم أحسنكم أخلاقاً"</p>
-                                <span class="quote-author-source">— الرسول محمد (ﷺ)، صحيح البخاري</span>
-                            </div>
-                            <div class="quote-slide">
-                                <p class="quote-text-main font-serif">"كن في الدنيا كأنك غريب أو عابر سبيل"</p>
-                                <span class="quote-author-source">— عبد الله بن عمر (رضي الله عنه)، صحيح البخاري</span>
-                            </div>
-                            <div class="quote-slide">
-                                <p class="quote-text-main font-serif">"لا تنظر إلى صغر الخطيئة، ولكن انظر إلى عظمة من عصيت"</p>
-                           <!-- 8. Interactive Adhkar Section -->
-        <section class="section donation-section" id="donate">
-            <div class="container animate-fade-in-up">
-                <div class="section-header text-center">
-                    <h2 class="section-title font-title" id="title-donate">أذكار الصباح والمساء</h2>
-                    <p class="section-desc">حصن نفسك بأذكار الصباح والمساء اليومية المأثورة المنسقة والمتباعدة بدقة عالية ليسهل عليك قراءتها وتتبعها يومياً.</p>
-                </div>
-
-                <!-- Adhkar Tabs & Progress Panel -->
-                <div class="adhkar-control-panel">
-                    <div class="adhkar-tabs" id="adhkar-tabs-group">
-                        <button class="adhkar-tab-btn active" id="tab-morning" data-tab="morning">
-                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="tab-icon">
-                                <circle cx="12" cy="12" r="5" />
-                                <line x1="12" y1="1" x2="12" y2="3" />
-                                <line x1="12" y1="21" x2="12" y2="23" />
-                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                                <line x1="1" y1="12" x2="3" y2="12" />
-                                <line x1="21" y1="12" x2="23" y2="12" />
-                            </svg>
-                            أذكار الصباح
-                        </button>
-                        <button class="adhkar-tab-btn" id="tab-evening" data-tab="evening">
-                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="tab-icon">
-                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                            </svg>
-                            أذكار المساء
-                        </button>
-                    </div>
-
-                    <div class="adhkar-global-progress">
-                        <div class="progress-details">
-                            <span id="adhkar-progress-text">جاري احتساب التقدم...</span>
-                            <button class="adhkar-reset-btn" id="adhkar-global-reset" title="تصفير أذكار هذا القسم">
-                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
-                                </svg>
-                                تصفير الأذكار
-                            </button>
-                        </div>
-                        <div class="progress-bar-outer">
-                            <div class="progress-bar-inner" id="adhkar-progress-bar" style="width: 0%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Spaced Out List of Adhkar in orderly arrangement -->
-                <div class="adhkar-layout-list animate-fade-in" id="adhkar-cards-list">
-                    <!-- Populated dynamically by script.js with beautiful animation -->
+                <div class="wisdoms-grid" id="wisdoms-list">
+                    <!-- Populated by JavaScript -->
                 </div>
             </div>
         </section>
-
 
         <!-- 9. Contact Section -->
         <section class="section contact-section" id="contact">
             <div class="container">
                 <div class="section-header text-center">
-                    <h2 class="section-title font-title" id="title-contact">تواصل معنا</h2>
-                    <p class="section-desc">هل لديك أي اقتراحات أو استفسارات حول البوابة الرقمية؟ يسعدنا تواصلك معنا مباشرة.</p>
+                    <h2 class="section-title font-title">تواصل معنا</h2>
+                    <p class="section-desc">يسعدنا تلقي رسائلكم واستفساركم.</p>
                 </div>
-
-                <div class="contact-split-layout">
-                    <!-- Form Container -->
-                    <div class="contact-form-glass-card">
-                        <form id="islamic-contact-form" novalidate>
-                            <div class="form-row">
-                                <div class="form-control-wrap">
-                                    <label for="usr-name">الاسم الكامل</label>
-                                    <input type="text" id="usr-name" name="name" placeholder="مثال: كريم أحمد" required>
-                                    <span class="field-error-msg" id="err-name">الاسم الكامل مطلوب.</span>
-                                </div>
-                                <div class="form-control-wrap">
-                                    <label for="usr-email">البريد الإلكتروني</label>
-                                    <input type="email" id="usr-email" name="email" placeholder="مثال: contact@domain.com" required>
-                                    <span class="field-error-msg" id="err-email">يرجى كتابة بريد إلكتروني صحيح.</span>
-                                </div>
-                            </div>
-
-                            <div class="form-control-wrap">
-                                <label for="usr-subject">موضوع الرسالة</label>
-                                <input type="text" id="usr-subject" name="subject" placeholder="مثال: اقتراح بخصوص السبحة أو الأذكار" required>
-                                <span class="field-error-msg" id="err-subject">الموضوع مطلوب.</span>
-                            </div>
-
-                            <div class="form-control-wrap">
-                                <label for="usr-message">نص الرسالة</label>
-                                <textarea id="usr-message" name="message" rows="5" placeholder="اكتب اقتراحك أو استفسارك هنا..." required></textarea>
-                                <span class="field-error-msg" id="err-message">لا يمكن إرسال رسالة فارغة.</span>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary w-full" id="contact-submit-btn">
-                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
-                                    <line x1="22" y1="2" x2="11" y2="13" />
-                                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                                </svg>
-                                إرسال الرسالة
-                            </button>
-                        </form>
-                        
-                        <div class="success-alert-glow hidden" id="contact-success-box">
-                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" class="alert-icon">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            <div class="alert-txt">
-                                <strong>الحمد لله!</strong> تم التحقق من رسالتك بنجاح وحفظها في السجلات المحلية للمحاكة الفورية.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Map Blueprint Sidebar -->
-                    <div class="contact-details-sidebar">
-                        <div class="contact-info-card-glass">
-                            <div class="info-item">
-                                <div class="info-icon-wrap">
-                                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                        <circle cx="12" cy="10" r="3" />
-                                    </svg>
-                                </div>
-                                <div class="info-text">
-                                    <h4>الموقع الفعلي للمقر</h4>
-                                    <p>حي الأزهر الشريف، القاهرة، جمهورية مصر العربية</p>
-                                </div>
-                            </div>
-
-                            <div class="info-item">
-                                <div class="info-icon-wrap">
-                                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                                    </svg>
-                                </div>
-                                <div class="info-text">
-                                    <h4>الخط المباشر الموحد</h4>
-                                    <p>+20 (2) 555-6667 (دولي)</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Beautiful stylized Google Maps placeholder with geometric outlines -->
-                        <div class="map-placeholder-card-glass">
-                            <div class="map-aesthetic-header">
-                                <span class="map-green-pulse"></span>
-                                <h5>مخطط تحديد موقع بيت الله</h5>
-                            </div>
-                            <div class="map-blueprint-box">
-                                <svg class="blueprint-lines" viewBox="0 0 260 140" width="100%" height="100%">
-                                    <!-- Streets blueprint pattern -->
-                                    <line x1="20" y1="10" x2="20" y2="130" stroke="rgba(251,191,36,0.1)" stroke-width="2" />
-                                    <line x1="120" y1="10" x2="120" y2="130" stroke="rgba(251,191,36,0.15)" stroke-width="3" />
-                                    <line x1="220" y1="10" x2="220" y2="130" stroke="rgba(251,191,36,0.1)" stroke-width="2" />
-                                    <line x1="10" y1="40" x2="250" y2="40" stroke="rgba(251,191,36,0.1)" stroke-width="2" />
-                                    <line x1="10" y1="90" x2="250" y2="90" stroke="rgba(251,191,36,0.2)" stroke-width="4" />
-                                    
-                                    <!-- Mosque outline box -->
-                                    <rect x="90" y="55" width="60" height="25" rx="4" fill="rgba(6, 78, 59, 0.4)" stroke="var(--color-accent-gold)" stroke-width="1.5" />
-                                    <!-- Minaret dots -->
-                                    <circle cx="95" cy="67" r="2" fill="var(--color-accent-gold)" />
-                                    <circle cx="145" cy="67" r="2" fill="var(--color-accent-gold)" />
-                                    <text x="120" y="71" font-size="6" font-family="'Plus Jakarta Sans', sans-serif" fill="white" font-weight="bold" text-anchor="middle">الجامع الأزهر</text>
-                                    
-                                    <!-- User location pulse -->
-                                    <circle cx="190" cy="110" r="4" fill="#10b981" />
-                                    <circle cx="190" cy="110" r="10" fill="none" stroke="#10b981" stroke-width="1" class="pulse" />
-                                    <text x="190" y="125" font-size="5" font-family="'Plus Jakarta Sans', sans-serif" fill="#10b981" text-anchor="middle">موقعك الحالي</text>
-
-                                    <!-- Navigation route vector line -->
-                                    <path d="M190,110 L190,90 L120,90 L120,80" fill="none" stroke="var(--color-accent-gold)" stroke-width="2" stroke-dasharray="3,3" />
-                                </svg>
-                                <span class="blueprint-coordinate">COORD: 30.0444° N, 31.2357° E</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
+                <form id="contact-form" class="contact-form">
+                    <input type="text" name="name" placeholder="الاسم" required>
+                    <input type="email" name="email" placeholder="البريد الإلكتروني" required>
+                    <textarea name="message" placeholder="رسالتك" required></textarea>
+                    <button type="submit" class="btn btn-primary">إرسال</button>
+                </form>
             </div>
         </section>
 
     </main>
+    </div>
+
+    <!-- Separate Adhkar Page View -->
+    <div id="adhkar-view" class="view-hidden">
+        <section class="adhkar-page-content container">
+            <header class="adhkar-page-header">
+                <button onclick="switchToHomeView()" class="btn btn-secondary back-btn">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                    العودة للرئيسية
+                </button>
+                <div class="text-center">
+                    <p class="section-desc">خطة ذكر منظمة - تصفح الأذكار واحداً تلو الآخر</p>
+                </div>
+            </header>
+
+            <div class="adhkar-page-tabs">
+                <button class="tab-btn-page active" id="btn-morning" onclick="showAdhkar('morning', event)">أذكار الصباح</button>
+                <button class="tab-btn-page" id="btn-evening" onclick="showAdhkar('evening', event)">أذكار المساء</button>
+            </div>
+
+            <div id="adhkar-page-list" class="adhkar-focus-container">
+                <!-- Focused Adhkar Displayed Here -->
+            </div>
+        </section>
+    </div>
 
     <!-- Footer -->
     <footer class="main-footer">
